@@ -1,0 +1,544 @@
+/*
+Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to edit this template
+*/
+/* 
+    Created on : 10 abr 2026, 6:51:47 p.m.
+    Author     : Desvelados
+*/
+
+
+
+/* --- Seccion Fuente --- */
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Regular.ttf'); /* El nombre exacto del archivo */
+}
+
+@font-face {
+    font-family: 'Roboto';
+    src: url('Roboto-Bold.ttf');
+    font-weight: bold;
+}
+
+.root {
+    -fx-font-family: 'Roboto';
+}
+
+
+
+/* --- Seccion "Menu lateral" --- */
+.Menu-Contenedor {
+    -fx-background-color: #464d55; /* Color gris oscuro */
+    -fx-background-radius: 0 10 10 0; /* Formato: Arriba-Izquierda Arriba-Derecha Abajo-Derecha Abajo-Izquierda */
+    -fx-border-radius: 0 10 10 0;  
+    -fx-padding: 20 0 20 0;
+}
+
+.Menu-Categoria {
+    -fx-text-fill: white;
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 13px;
+    -fx-padding: 10 10 5 15;
+}
+
+.Menu-Opciones {
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5db; /* Blanco azulado suave */
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 10 8 30; /* Sangría de 30px para las sub-opciones */
+    -fx-cursor: hand;
+    -fx-background-radius: 10; 
+}
+
+.Menu-Opciones:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+}
+
+.Menu-Opcion-CerrarSesion {
+    -fx-border-color: rgba(255, 255, 255, 0.1) transparent transparent transparent;
+    -fx-border-width: 1 0 0 0; /* Línea sutil arriba para separar */
+    -fx-text-fill: #ff6b6b; /* Un tono rojizo suave */
+}
+
+.Menu-Categoria-Opcion { 
+    -fx-background-color: transparent;
+    -fx-text-fill: #cbd5db; /* Blanco azulado suave */
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-alignment: CENTER_LEFT;
+    -fx-padding: 8 10 10 30; /* Sangría de 30px para las sub-opciones 8 10 8 30*/
+    -fx-cursor: hand;
+    -fx-background-radius: 10; 
+}
+
+.Menu-Categoria-Opcion:hover {
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-text-fill: white;
+}
+
+.Menu-Opcion-CerrarSesion:hover {
+    -fx-background-color: #dc3545; /* Rojo al pasar el mouse */
+    -fx-text-fill: white;
+}
+
+
+
+/* --- Seccion Texto --- */
+.Texto-Remarcado-Blanco-Titulo {
+    -fx-text-fill: white !important;
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.Texto-remarcado-azul-titulo {
+    -fx-min-width: 100px;
+    -fx-text-fill:  #0d273e;
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+.Texto {
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+.Texto-remarcado {
+    -fx-font-family: 'Roboto';
+    -fx-text-fill:  #387eb9;
+    -fx-font-size: 12px;
+}
+
+.Texto-remarcado-negrita {
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.Texto-remarcado-azul {
+    -fx-font-family: 'Roboto';
+    -fx-text-fill:  #0d273e;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+}
+
+.Texto-remarcado-azul-titulo-columna {
+    -fx-font-weight: bold;
+    -fx-text-fill: #0d273e;
+    -fx-font-size: 14px;
+}
+
+
+/* --- Seccion Boton --- */
+.Boton-Azul-Grande {
+    -fx-font-family: 'Roboto';
+    -fx-background-color: #387eb9; /* Tu azul seleccionado */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+    
+    /* --- BORDER RADIUS DE 10 --- */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    
+    /* --- TAMAÑO DESDE CSS --- */
+    -fx-pref-width: 208; 
+    -fx-pref-height: 26;
+    -fx-padding: 0;
+
+    /* --- EFECTO DE SOMBRA --- */
+    /* dropshadow(tipo, color, radio_difuminado, propagacion, x, y) */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
+}
+
+/* Efecto al pasar el mouse (Hover) */
+.Boton-Azul-Grande:hover {
+    /* Se aclara un poco y la sombra crece para simular elevación */
+    -fx-background-color: #4a92cd;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 12, 0, 0, 5);
+}
+
+.Boton-Azul {
+    -fx-font-family: 'Roboto';
+    -fx-background-color: #387eb9; /* Tu azul seleccionado */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+
+    /* --- BORDER RADIUS DE 10 --- */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    
+    /* --- TAMAÑO DESDE CSS --- */
+    -fx-pref-width: 98; 
+    -fx-pref-height: 26;
+    
+    -fx-padding: 0;
+
+    /* --- EFECTO DE SOMBRA --- */
+    /* dropshadow(tipo, color, radio_difuminado, propagacion, x, y) */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
+}
+
+.Boton-Azul:hover {
+    -fx-background-color: #4a92cd;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 12, 0, 0, 5);
+}
+
+/* Efecto al presionar: se oscurece y la sombra se reduce (efecto hundido) */
+.Boton-Azul:pressed {
+    -fx-background-color: #2d6696;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+}
+  
+.Boton-Azul-sintamano {
+    -fx-background-color: #0d273e;
+    -fx-text-fill: white;
+    -fx-background-radius: 10;
+    -fx-font-weight: bold;
+    -fx-cursor: hand;
+}
+
+.Boton-Azul-sintamano:hover {
+    -fx-background-color: #1a4a75; /* Un tono un poco más claro al pasar el mouse */
+}
+
+.Boton-Rojo-Grande {
+    -fx-font-family: 'Roboto';
+    -fx-background-color: #ff6b6b; /* Rojo */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+
+    /* --- BORDER RADIUS DE 10 --- */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    
+    /* --- TAMAÑO DESDE CSS --- */
+    -fx-pref-width: 208; 
+    -fx-pref-height: 26;
+    
+    -fx-padding: 0;
+
+    /* --- EFECTO DE SOMBRA --- */
+    /* dropshadow(tipo, color, radio_difuminado, propagacion, x, y) */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
+}
+
+.Boton-Rojo-Grande:hover {
+    -fx-background-color: #dc3545; /* Rojo al pasar el mouse */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 12, 0, 0, 5);
+}
+
+/* Efecto al presionar: se oscurece y la sombra se reduce (efecto hundido) */
+.Boton-Rojo-Grande:pressed {
+    -fx-background-color: #922b21;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+}
+
+.Boton-Rojo {
+    -fx-font-family: 'Roboto';
+    -fx-background-color: #ff6b6b; /* Tu azul seleccionado */
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 10 20 10 20;
+    -fx-cursor: hand;
+
+    /* --- BORDER RADIUS DE 10 --- */
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    
+    /* --- TAMAÑO DESDE CSS --- */
+    -fx-pref-width: 98; 
+    -fx-pref-height: 26;
+    
+    -fx-padding: 0;
+
+    /* --- EFECTO DE SOMBRA --- */
+    /* dropshadow(tipo, color, radio_difuminado, propagacion, x, y) */
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.3), 10, 0, 0, 4);
+}
+
+/* Efecto Hover: se aclara un poco y la sombra crece para simular elevación */
+.Boton-Rojo:hover {
+    -fx-background-color: #dc3545;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.4), 12, 0, 0, 5);
+}
+
+/* Efecto al presionar: se oscurece y la sombra se reduce (efecto hundido) */
+.Boton-Rojo:pressed {
+    -fx-background-color: #922b21;
+    -fx-effect: dropshadow(three-pass-box, rgba(0, 0, 0, 0.2), 4, 0, 0, 1);
+}
+
+
+/* --- Seccion Contenedores --- */
+.Contenedor-Redondo {
+    -fx-background-color: #f4f4f4; /* Color de fondo suave */
+    -fx-background-radius: 10;    /* Esto da la forma redondeada */
+    -fx-border-color: #cccccc;    /* Color del borde gris claro */
+    -fx-border-radius: 10;        /* Debe coincidir con el radio del fondo */
+    -fx-padding: 5 15 5 15;       /* Espacio interno para que el texto no toque los bordes */
+    -fx-border-width: 1;
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+/* Efecto cuando el usuario hace clic para escribir */
+.Contenedor-Redondo:focused {
+    -fx-background-color: white;
+    -fx-border-color: #387eb9;    /* Azul para resaltar el foco */
+    -fx-border-width: 2;          /* Borde un poco más grueso al escribir */
+}
+
+
+.Campo-Texto-redondo {
+    -fx-background-color: #f4f4f4; /* Color de fondo suave */
+    -fx-background-radius: 10;    /* Esto da la forma redondeada */
+    -fx-border-color: #cccccc;    /* Color del borde gris claro */
+    -fx-border-radius: 10;        /* Debe coincidir con el radio del fondo */
+    -fx-padding: 5 15 5 15;       /* Espacio interno para que el texto no toque los bordes */
+    -fx-border-width: 1;
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+/* Efecto cuando el usuario hace clic para escribir */
+.Campo-Texto-redondo:focused {
+    -fx-background-color: white;
+    -fx-border-color: #387eb9;    /* Azul para resaltar el foco */
+    -fx-border-width: 2;          /* Borde un poco más grueso al escribir */
+} 
+
+.table-view {
+    -fx-background-color: white;
+    /* REDONDEADO DE LA TABLA */
+    -fx-background-radius: 10; 
+    -fx-border-radius: 10;
+    -fx-border-color: #d1d1d1; /* Borde sutil para que se note el redondeado */
+    -fx-border-width: 1;
+    
+    -fx-background-insets: 0;
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+/* Forzar que las esquinas superiores de la cabecera también se redondeen */
+.table-view .column-header-background {
+    -fx-background-color: white;
+    -fx-background-radius: 10 10 0 0; /* Solo arriba */
+    -fx-border-color: transparent transparent #d1d1d1 transparent; 
+    -fx-border-width: 0 0 2.5 0; 
+    -fx-padding: 0;
+}
+
+/* Forzar redondeado en las filas para que no sobresalgan en las esquinas inferiores */
+.table-row-cell {
+    -fx-background-color: white;
+    -fx-background-radius: 0;
+}
+
+/* Quita el fondo gris de cada dos columnas */
+.table-row-cell:odd, .table-row-cell:even {
+    -fx-background-color: white;
+}
+
+/* 2. Cabeceras (Títulos) */
+.table-view .column-header {
+    -fx-background-color: white;
+    -fx-border-color: transparent; 
+    -fx-size: 45; 
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: #2c3e50; 
+    -fx-font-family: 'Roboto Bold'; 
+    -fx-font-weight: bold;
+}
+
+/* 3. Estilo de las Celdas */
+.table-cell {
+    -fx-border-color: transparent transparent #f2f2f2 transparent; 
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 15 10 15 10; 
+    -fx-text-fill: #4f4f4f;
+}
+
+/* 4. SELECCIÓN Y HOVER */
+
+.table-row-cell:selected {
+    -fx-background-color: #387eb9; 
+}
+.table-row-cell:selected .table-cell {
+    -fx-text-fill: white !important; 
+}
+
+.table-row-cell:hover {
+    -fx-background-color: #f1f4f7;
+}
+.table-row-cell:hover .table-cell {
+    -fx-text-fill: #4f4f4f;
+}
+
+.table-row-cell:selected:hover {
+    -fx-background-color: #2e6899; 
+}
+.table-row-cell:selected:hover .table-cell {
+    -fx-text-fill: white !important;
+}
+
+/* 5. BARRA DE SCROLL (Circular y azul) */
+.table-view .virtual-flow .scroll-bar:vertical,
+.table-view .virtual-flow .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+    -fx-padding: 2;
+}
+
+.table-view .virtual-flow .scroll-bar .thumb {
+    -fx-background-color: #ced4da; 
+    -fx-background-radius: 10;
+}
+
+.table-view .virtual-flow .scroll-bar .thumb:hover {
+    -fx-background-color: #387eb9; 
+}
+
+.table-view .virtual-flow .scroll-bar .increment-button, 
+.table-view .virtual-flow .scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+.table-view .virtual-flow .scroll-bar .increment-arrow, 
+.table-view .virtual-flow .scroll-bar .decrement-arrow {
+    -fx-shape: " "; 
+}
+
+/* 6. Limpieza final */
+.table-view .filler, 
+.table-view .column-header .filler {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+}
+
+.table-view:focused {
+    -fx-background-color: transparent, white;
+    -fx-background-insets: -1.4, 0;
+    -fx-background-radius: 15; /* Coincide con el redondeado general */
+}
+
+
+/* Estilo para el DatePicker */
+.date-picker {
+    -fx-background-color: #f4f4f4; /* Tu color de fondo suave */
+    -fx-background-radius: 10;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 10;
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+/* Redondear el botón del calendario para que no rompa la forma */
+.date-picker > .arrow-button {
+    -fx-background-radius: 0 10 10 0; /* Solo redondea las esquinas derechas */
+    -fx-background-color: transparent;
+}
+
+/* Efecto focus al seleccionar el DatePicker */
+.date-picker:focused {
+    -fx-background-color: white;
+    -fx-border-color: #387eb9; /* Tu azul de foco */
+    -fx-border-width: 2;
+}
+
+/* Estilo para el ComboBox */
+.combo-box {
+    -fx-background-color: #f4f4f4;
+    -fx-background-radius: 10;
+    -fx-border-color: #cccccc;
+    -fx-border-radius: 10;
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 12px;
+}
+
+/* Quitar el fondo por defecto del botón de la flecha */
+.combo-box > .arrow-button {
+    -fx-background-radius: 0 10 10 0;
+    -fx-background-color: transparent;
+}
+
+/* Asegurar que el texto interno tenga el padding correcto */
+.combo-box > .list-cell {
+    -fx-padding: 5 15 5 15;
+}
+
+/* Efecto focus al abrir el ComboBox */
+.combo-box:focused {
+    -fx-background-color: white;
+    -fx-border-color: #387eb9;
+    -fx-border-width: 2;
+}
+
+
+.date-picker > .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-padding: 5 10 5 10; /* Ajusta para que el texto no pegue al borde izquierdo */
+}
+
+/* Evita que el cuadro interno cambie de color al tener el foco */
+.date-picker > .text-field:focused {
+    -fx-background-color: transparent;
+}
+
+.date-picker:focused {
+    -fx-background-color: white;
+    -fx-border-color: #387eb9; /* Tu azul de foco */
+    -fx-border-width: 2;
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+}
+
+/* Selecciona la lista que se despliega */
+.combo-box-base .combo-box-popup .list-view {
+    -fx-background-radius: 10;
+    -fx-border-radius: 10;
+    -fx-border-color: #cccccc; /* Gris suave de tu diseño */
+    -fx-border-width: 1;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 5); /* Sombra suave */
+}
+
+/* Estilo para cada opción dentro de la lista */
+.combo-box-base .combo-box-popup .list-view .list-cell {
+    -fx-padding: 8 15 8 15; /* Espacio interno coherente con tus TextField */
+    -fx-background-color: transparent;
+    -fx-text-fill: #333333;
+}
+
+/* Estilo cuando pasas el mouse por encima de una opción */
+.combo-box-base .combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #f4f4f4; /* Mismo gris suave de fondo de tus campos */
+    -fx-text-fill: #387eb9; /* Tu azul de enfoque */
+}
+
+/* Estilo de la opción seleccionada */
+.combo-box-base .combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #e3f2fd;
+    -fx-text-fill: #0d273e; /* Tu azul corporativo oscuro */
+}

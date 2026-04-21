@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane minHeight="423.0" minWidth="430.0" prefHeight="423.0" prefWidth="430.0" stylesheets="@Estilos/Estilos_Interfaz.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.mobimedline_sistema.ConsultarEmpleadoController">
+   <center>
+      <TableView fx:id="tblEmpleados" editable="true" prefHeight="254.0" prefWidth="583.0" styleClass="list-cell" BorderPane.alignment="CENTER">
+         <columns>
+            <TableColumn fx:id="colNombre" prefWidth="75.0" text="Nombre" />
+            <TableColumn fx:id="colUsuario" prefWidth="75.0" text="Usuario" />
+            <TableColumn fx:id="colPassword" prefWidth="75.0" text="Contraseña" />
+         </columns>
+         <columnResizePolicy>
+            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+         </columnResizePolicy>
+         <opaqueInsets>
+            <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
+         </opaqueInsets>
+         <BorderPane.margin>
+            <Insets bottom="20.0" left="30.0" right="30.0" top="20.0" />
+         </BorderPane.margin>
+      </TableView>
+   </center>
+   <top>
+      <HBox prefHeight="36.0" prefWidth="623.0" spacing="14.0" BorderPane.alignment="CENTER">
+         <children>
+            <Label styleClass="Texto-remarcado-azul-titulo" stylesheets="@Estilos/Estilos_Interfaz.css" text="Consultar empleados">
+               <padding>
+                  <Insets top="5.0" />
+               </padding>
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Label>
+         </children>
+         <padding>
+            <Insets left="5.0" right="33.0" top="14.0" />
+         </padding>
+         <BorderPane.margin>
+            <Insets left="20.0" />
+         </BorderPane.margin>
+      </HBox>
+   </top>
+   <bottom>
+      <HBox minHeight="33.0" minWidth="430.0" prefHeight="33.0" prefWidth="430.0" spacing="15.0" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="20.0" right="15.0" />
+         </BorderPane.margin>
+         <padding>
+            <Insets left="180.0" />
+         </padding>
+         <children>
+            <Button fx:id="btnEliminar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Eliminar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Rojo" text="Eliminar" />
+            <Button fx:id="btnEditar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Editar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Azul" text="Editar" />
+            <Button fx:id="btnGuardar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Guardar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Azul" text="Guardar" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </HBox>
+   </bottom>
+</BorderPane>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.String?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="apPadre" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" stylesheets="@Estilos/Estilos_Interfaz.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.mobimedline_sistema.MenuVentasController">
+   <children>
+      <BorderPane layoutX="255.0" layoutY="161.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <top>
+            <AnchorPane prefHeight="60.0" prefWidth="200.0" style="-fx-background-color: #0d273e;" BorderPane.alignment="CENTER">
+               <children>
+                  <Pane layoutX="205.0" layoutY="48.0" prefHeight="15.0" prefWidth="200.0" style="-fx-background-color: #0d273e;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Pane layoutX="237.0" layoutY="-54.0" prefHeight="15.0" prefWidth="200.0" style="-fx-background-color: #0d273e;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+                  <Label fx:id="lblMenu" accessibleRole="BUTTON" layoutX="21.0" layoutY="22.0" styleClass="Texto-Remarcado-Blanco-Titulo" text="MENÚ">
+                     <cursor>
+                        <Cursor fx:constant="HAND" />
+                     </cursor>
+                     <graphic>
+                        <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@ElementosVisuales/iconos/Iconos_Sistema/icono_menu.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Label>
+                  <ImageView fitHeight="28.0" fitWidth="75.0" layoutX="165.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@ElementosVisuales/Logo_Mobimedline.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+         </top>
+         <left>
+            <AnchorPane fx:id="apMenu" prefHeight="200.0" prefWidth="210.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox fx:id="vbMenu" alignment="TOP_RIGHT" layoutX="64.0" layoutY="110.0" prefHeight="200.0" prefWidth="100.0" styleClass="Menu-Contenedor" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <VBox prefHeight="63.0" prefWidth="210.0">
+                           <children>
+                              <Label fx:id="lblDashboard" styleClass="Menu-Categoria-Opcion" text="Dashboard">
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@ElementosVisuales/iconos/Iconos_Sistema/icono_Dashboard.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Label>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="55.0" prefWidth="210.0">
+                           <children>
+                              <Label fx:id="lblOrdenCompraCategoria" alignment="CENTER" styleClass="Menu-Categoria" text="Orden de compra" textAlignment="CENTER">
+                                 <cursor>
+                                    <Cursor fx:constant="HAND" />
+                                 </cursor>
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@ElementosVisuales/iconos/Iconos_Sistema/icono_ODC.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic>
+                              </Label>
+                              <VBox fx:id="vbSubOrden" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="lblNuevaOrden" alignment="CENTER" styleClass="Menu-Opciones" text="Nueva ODC" textAlignment="CENTER">
+                                       <cursor>
+                                          <Cursor fx:constant="HAND" />
+                                       </cursor>
+                                    </Label>
+                                    <Label fx:id="lblConsultarOrden" onMouseClicked="#irConsultaOrden" styleClass="Menu-Opciones" text="Consulta ODC" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <VBox prefHeight="59.0" prefWidth="210.0">
+                           <children>
+                              <Label fx:id="lblProductoCategoria" styleClass="Menu-Categoria" text="Producto">
+                                 <graphic>
+                                    <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                                       <image>
+                                          <Image url="@ElementosVisuales/iconos/Iconos_Sistema/icono_Producto.png" />
+                                       </image>
+                                    </ImageView>
+                                 </graphic></Label>
+                              <VBox fx:id="vbSubProducto" prefHeight="200.0" prefWidth="100.0">
+                                 <children>
+                                    <Label fx:id="lblModificarProducto" styleClass="Menu-Opciones" text="Catálogo" />
+                                 </children>
+                              </VBox>
+                           </children>
+                        </VBox>
+                        <Region prefHeight="178.0" prefWidth="170.0" VBox.vgrow="ALWAYS" />
+                        <Label fx:id="lblCerrarSesion" contentDisplay="CENTER" text="Cerra sesión">
+                           <cursor>
+                              <Cursor fx:constant="HAND" />
+                           </cursor>
+                           <VBox.margin>
+                              <Insets />
+                           </VBox.margin>
+                           <styleClass>
+                              <String fx:value="Menu-Opciones" />
+                              <String fx:value="Menu-Opcion-CerrarSesion" />
+                           </styleClass>
+                        </Label>
+                     </children></VBox>
+               </children></AnchorPane>
+         </left>
+         <center>
+            <AnchorPane fx:id="apContenedorCentro" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" BorderPane.alignment="CENTER" />
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

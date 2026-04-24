@@ -118,7 +118,7 @@ public class Productov {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("Producto{codigo'=").append(codigo).append("', nombre='").append(nombre).append("', insumos=[");
+        sb.append("Producto{codigo='").append(codigo).append("', nombre='").append(nombre).append("', insumos=[");
         for (int i = 0; i < insumos.size(); i++) {
             sb.append(insumos.get(i).toString());
             if (i < insumos.size() - 1) sb.append(", ");

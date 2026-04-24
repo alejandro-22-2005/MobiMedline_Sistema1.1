@@ -5,6 +5,9 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+
+import interfaz.mobimedline_sistema.Productov;
+
 public class AgregarProductoController {
 
     @FXML 
@@ -16,22 +19,22 @@ public class AgregarProductoController {
     @FXML 
     private TextField txtCantidadInsumo;
     @FXML 
-    private TableView<Insumo> tablaInsumos;
+    private TableView<Insumov> tablaInsumos;
     @FXML 
-    private TableColumn<Insumo, String> colNombreInsumo;
+    private TableColumn<Insumov, String> colNombreInsumo;
     @FXML 
-    private TableColumn<Insumo, Integer> colCantidadInsumo;
+    private TableColumn<Insumov, Integer> colCantidadInsumo;
     @FXML 
-    private TableColumn<Insumo, Void> colAcciones;
+    private TableColumn<Insumov, Void> colAcciones;
     
-    private ObservableList<Insumo> listaInsumos = FXCollections.observableArrayList();
+    private ObservableList<Insumov> listaInsumos = FXCollections.observableArrayList();
     
 
     @FXML
     public void initialize() {
         // Configurar columnas de la tabla
         colNombreInsumo.setCellValueFactory(new PropertyValueFactory<>("nombre"));
-        colCantidadInsumo.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+        colCantidadInsumo.setCellValueFactory(new PropertyValueFactory<>("cantidadPorUnidad"));
         
         // Configurar columna de acciones (botón eliminar)
         colAcciones.setCellFactory(param -> new TableCell<>() {
@@ -39,7 +42,7 @@ public class AgregarProductoController {
             
             {
                 btnEliminar.setOnAction(event -> {
-                    Insumo insumo = getTableView().getItems().get(getIndex());
+                    Insumov insumo = getTableView().getItems().get(getIndex());
                     listaInsumos.remove(insumo);
                 });
             }
@@ -77,7 +80,7 @@ public class AgregarProductoController {
         }
         
         // Crear y agregar insumo
-        Insumo insumo = new Insumo(txtNombreInsumo.getText().trim(), cantidad);
+        Insumov insumo = new Insumov(txtNombreInsumo.getText().trim(), cantidad);
         listaInsumos.add(insumo);
         
         // Limpiar campos de insumo
@@ -102,10 +105,10 @@ public class AgregarProductoController {
         }
         
         // Crear el producto
-        Producto producto = new Producto(txtCodigo.getText().trim(), txtNombre.getText().trim());
+        Productov producto = new Productov(txtCodigo.getText().trim(), txtNombre.getText().trim());
         
         // Agregar todos los insumos
-        for (Insumo insumo : listaInsumos) {
+        for (Insumov insumo : listaInsumos) {
             producto.agregarInsumo(insumo);
         }
         
@@ -117,9 +120,9 @@ public class AgregarProductoController {
         resumen.append("Total de insumos: ").append(producto.getTotalInsumos()).append("\n\n");
         resumen.append("Lista de insumos:\n");
         
-        for (Insumo insumo : producto.getInsumos()) {
+        for (Insumov insumo : producto.getInsumos()) {
             resumen.append("  • ").append(insumo.getNombre())
-                   .append(" - ").append(insumo.getCantidad()).append(" unidades\n");
+                   .append(" - ").append(insumo.getCantidadPorUnidad()).append(" unidades\n");
         }
         
         mostrarAlerta(Alert.AlertType.INFORMATION, "Producto guardado", resumen.toString());

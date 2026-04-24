@@ -34,4 +34,4 @@ public class Insumov {
     public String toString() {
         return nombre + " - " + cantidadPorUnidad + " unidades";
     }
-}
+} // ID Nombre cantidad 

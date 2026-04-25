@@ -14,9 +14,9 @@ public class ProductoBasev {
     
     private int id;
     private String descripcion;
-    private List<Insumov> insumos;
+    private List<Insumo> insumos;
 
-    public ProductoBasev(int id, String descripcion, List<Insumov> insumos) {
+    public ProductoBasev(int id, String descripcion, List<Insumo> insumos) {
         this.id = id;
         this.descripcion = descripcion;
         this.insumos = insumos;
@@ -38,11 +38,11 @@ public class ProductoBasev {
         this.descripcion = descripcion;
     }
 
-    public List<Insumov> getInsumos() {
+    public List<Insumo> getInsumos() {
         return insumos;
     }
 
-    public void setInsumos(List<Insumov> insumos) {
+    public void setInsumos(List<Insumo> insumos) {
         this.insumos = insumos;
     }
 }

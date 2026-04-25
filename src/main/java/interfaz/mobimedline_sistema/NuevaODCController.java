@@ -25,16 +25,16 @@ public class NuevaODCController implements Initializable {
     private TextField txtFieldCantidad;
 
     @FXML
-    private TableView<Productov> tablevTabla;
+    private TableView<Producto> tablevTabla;
 
     @FXML
-    private TableColumn<Productov, Integer> tcId;
+    private TableColumn<Producto, Integer> tcId;
 
     @FXML
-    private TableColumn<Productov, String> tcDescripcion;
+    private TableColumn<Producto, String> tcDescripcion;
 
     @FXML
-    private TableColumn<Productov, Integer> tcCantidad;
+    private TableColumn<Producto, Integer> tcCantidad;
 
     @FXML
     private Button btnMas1;
@@ -46,7 +46,7 @@ public class NuevaODCController implements Initializable {
    @FXML
     void eliminarProducto(ActionEvent event) {
 
-        Productov productoSeleccionado = tablevTabla.getSelectionModel().getSelectedItem();
+        Producto productoSeleccionado = tablevTabla.getSelectionModel().getSelectedItem();
 
         if (productoSeleccionado == null) {
         mostrarAlerta("Sin selección", "Debes seleccionar un producto de la tabla para eliminarlo.");
@@ -57,7 +57,7 @@ public class NuevaODCController implements Initializable {
         confirmacion.setTitle("Confirmar eliminación");
         confirmacion.setHeaderText("Eliminar producto");
         confirmacion.setContentText("¿Deseas eliminar el producto con ID " 
-            + productoSeleccionado.getId() + "?");
+            + productoSeleccionado.getSku() + "?");
 
         if (confirmacion.showAndWait().orElse(null) == javafx.scene.control.ButtonType.OK) {
             listaProductos.remove(productoSeleccionado);
@@ -66,7 +66,7 @@ public class NuevaODCController implements Initializable {
 
     
 
-    private final ObservableList<Productov> listaProductos = FXCollections.observableArrayList();
+    private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
     private final Catalogov Catalogo = new Catalogov();
 
     private void configurarTabla() {
@@ -114,7 +114,7 @@ public class NuevaODCController implements Initializable {
             return;
         }
 
-        Productov productoODC = new Productov(
+        Producto productoODC = new Producto(
                 productoBase.getId(),
                 productoBase.getDescripcion(),
                 cantidad,

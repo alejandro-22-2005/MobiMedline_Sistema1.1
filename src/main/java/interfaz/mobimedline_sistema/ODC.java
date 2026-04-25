@@ -20,6 +20,7 @@ public class ODC {
     private final String idODC;
     private final List<Producto> productos;
     private boolean tipoEspecial;
+    private Usuarios responsable;
     
     // --- Constructor ---
     public ODC() {
@@ -27,6 +28,15 @@ public class ODC {
         this.idODC = String.format("%05d-ODC", contadorSiguiente++);
         this.productos = new ArrayList<>();
         this.tipoEspecial = false;
+        this.responsable = null;
+    }
+    
+    public ODC(Usuarios responsable) {
+        // Genera el ID con formato #####-ODC (ej. 00001-ODC)
+        this.idODC = String.format("%05d-ODC", contadorSiguiente++);
+        this.productos = new ArrayList<>();
+        this.tipoEspecial = false;
+        this.responsable = responsable;
     }
     
     /**
@@ -166,9 +176,18 @@ public class ODC {
     public boolean getTipoEspecial(){ 
         return tipoEspecial; 
     }
+
+    public Usuarios getResponsable() {
+        return responsable;
+    }
     
     // --- Setters    
     public void setTipoEspecial(boolean tipo){
         this.tipoEspecial = tipo;
     }
+
+    public void setResponsable(Usuarios responsable) {
+        this.responsable = responsable;
+    }
+    
 }

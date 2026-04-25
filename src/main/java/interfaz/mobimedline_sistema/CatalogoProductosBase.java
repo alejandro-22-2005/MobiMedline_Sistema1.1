@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
- * @author engel
+ *Clase dedicada a guardar los productos cargados en el codigo
+ * @author Mike
  */
 public class CatalogoProductosBase {
     private static List<Producto> productosBase = new ArrayList<>();

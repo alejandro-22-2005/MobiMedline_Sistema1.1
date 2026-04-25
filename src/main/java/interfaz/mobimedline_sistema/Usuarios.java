@@ -10,6 +10,7 @@ package interfaz.mobimedline_sistema;
  */
 public class Usuarios {
     // --- Atributos --- 
+    private String usuario;
     private String nombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
@@ -17,7 +18,8 @@ public class Usuarios {
     private boolean Permisos; 
     
     // --- Constructor ---
-    public Usuarios(String nombre, String apellidoP, String apellidoM, String contraseña){
+    public Usuarios(String usuario, String nombre, String apellidoP, String apellidoM, String contraseña){
+        this.usuario = usuario; 
         this.nombre = nombre;
         apellidoPaterno = apellidoP;
         apellidoMaterno = apellidoM;
@@ -46,6 +48,11 @@ public class Usuarios {
         return Permisos;
     }
 
+    public String getUsuario() {
+        return usuario;
+    }
+    
+    
     // --- Setters
     public void setNombre(String nombre) {
         this.nombre = nombre;
@@ -66,4 +73,9 @@ public class Usuarios {
     public void setPermisos(boolean tipoUsuario) {
         this.Permisos = tipoUsuario;
     }   
+
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
+    }
+    
 }

@@ -71,4 +71,8 @@ public class CatalogoProductosBase {
     }
     
     //falta aplicar funsion de busqueda y aplicar a todos los nombres en mayuscula para eviatar problemas.
+
+    public static void setProductosBase(Producto producto ) {
+        CatalogoProductosBase.productosBase.add(producto);
+    }
 }

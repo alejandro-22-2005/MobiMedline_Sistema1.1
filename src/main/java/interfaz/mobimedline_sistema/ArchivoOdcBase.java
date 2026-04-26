@@ -15,6 +15,7 @@ public class ArchivoOdcBase {
     private static List<ODC> odcBase = new ArrayList<>();
     
     // Bloque estático para inicializar las ODC base una sola vez
+    
     static {
         //aqui va las ODC base a mostrar en la expo
         List<Producto> productos = CatalogoProductosBase.getProductosBase();

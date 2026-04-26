@@ -116,7 +116,5 @@ public class RecapitulacionUsuarioController {
         stage.close();
     }
     
-    //Hola
-    gyg
     
 }

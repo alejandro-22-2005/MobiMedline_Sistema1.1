@@ -137,7 +137,7 @@ public class NuevaODCController implements Initializable {
     StringBuilder contenido = new StringBuilder();
     contenido.append("PRODUCTOS REGISTRADOS EN LA LISTA\n\n");
 
-    for (Productov producto : listaProductos) {
+    for (Producto producto : listaProductos) {
         contenido.append("ID: ").append(producto.getId()).append("\n");
         contenido.append("Descripción: ").append(producto.getDescripcion()).append("\n");
         contenido.append("Cantidad: ").append(producto.getCantidad()).append("\n");

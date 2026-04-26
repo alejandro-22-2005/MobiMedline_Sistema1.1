@@ -16,21 +16,54 @@ public class CatalogoProductosBase {
 
     // Bloque estático para inicializar los productos base una sola vez
     static {
-        // --- Producto Base: Mesa ---
-        Producto mesa = new Producto("Mesa Estándar");
-        mesa.agregarInsumo(new Insumo("Tornillo", 8));
-        mesa.agregarInsumo(new Insumo("Tabla Madera", 1));
-        mesa.agregarInsumo(new Insumo("Pata Metálica", 4));
+        // --- Producto Base: Vitrina Futuro ---
+        Producto VitrinaFuturo = new Producto("Vitrina Modelo Futuro");
+        VitrinaFuturo.agregarInsumo(new Insumo("Vidrio de 33x60 cm", 1));
+        VitrinaFuturo.agregarInsumo(new Insumo("Cerradura", 1));
+        VitrinaFuturo.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 6));
         // Se crea con la plantilla
-        productosBase.add(mesa);
+        productosBase.add(VitrinaFuturo);
         
 
-        // --- Producto Base: Silla ---
-        Producto silla = new Producto("Silla");
-        silla.agregarInsumo(new Insumo("Respaldo", 1));
-        silla.agregarInsumo(new Insumo("Asiento", 1));
-        silla.agregarInsumo(new Insumo("Tornillo", 4));
-        productosBase.add(silla);
+        // --- Producto Base: Mesa de Exploracion Premium ---
+        Producto MesaExpPremium = new Producto("Mesa de Exploración Premium");
+        MesaExpPremium.agregarInsumo(new Insumo("Tapiz para Mesa de exploración", 1));
+        MesaExpPremium.agregarInsumo(new Insumo("Tope de plástico", 4));
+        MesaExpPremium.agregarInsumo(new Insumo("Agarradera de plástico", 2));
+        MesaExpPremium.agregarInsumo(new Insumo("Columpio grande", 1));
+        MesaExpPremium.agregarInsumo(new Insumo("Columpio chico", 1));
+        MesaExpPremium.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 4));
+        MesaExpPremium.agregarInsumo(new Insumo("Tornillo", 4));
+        MesaExpPremium.agregarInsumo(new Insumo("Tuerca", 4));
+        productosBase.add(MesaExpPremium);
+        
+        
+        // --- Producto Base: Escalerilla ---
+        Producto Escalerilla = new Producto("Escalerilla");
+        Escalerilla.agregarInsumo(new Insumo("Barril de plástico", 4));
+        Escalerilla.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 8));
+        // Se crea con la plantilla
+        productosBase.add(Escalerilla);
+        
+        
+         // --- Producto Base: Silla Toma de Muestra ---
+        Producto SillaTomadeMuestra = new Producto("Silla Toma de Muestra");
+        SillaTomadeMuestra.agregarInsumo(new Insumo("Tapiz para Silla toma de muestra", 1));
+        SillaTomadeMuestra.agregarInsumo(new Insumo("Cubierta de acero inoxidable de 30x30 cm", 1));
+        SillaTomadeMuestra.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 12));
+        SillaTomadeMuestra.agregarInsumo(new Insumo("Tapón cuadrado de plástico de 1 1/4 de pulgada", 4));
+        // Se crea con la plantilla
+        productosBase.add(SillaTomadeMuestra);
+        
+        
+         // --- Producto Base: Gabinete Hamilton ---
+        Producto GabineteHamilton = new Producto("Gabinete Hamilton");
+        GabineteHamilton.agregarInsumo(new Insumo("Vidrio de 30x45 cm", 1));
+        GabineteHamilton.agregarInsumo(new Insumo("Cubierta de acero inoxidable de 30x65 cm", 1));
+        GabineteHamilton.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 6));
+        GabineteHamilton.agregarInsumo(new Insumo("Barandal para Gabinete Hamilton", 1));
+        // Se crea con la plantilla
+        productosBase.add(GabineteHamilton);
     }
 
     public static List<Producto> getProductosBase() {

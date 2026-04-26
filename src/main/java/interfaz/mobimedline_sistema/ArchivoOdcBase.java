@@ -17,6 +17,28 @@ public class ArchivoOdcBase {
     // Bloque estático para inicializar las ODC base una sola vez
     static {
         //aqui va las ODC base a mostrar en la expo
+        Usuarios usuario = new Usuarios("JaviAnd","Javier","Andrade","Narvaez","54321");
+
+        List<Producto> productos = CatalogoProductosBase.getProductosBase();
+
+        //  ODC 1 
+        ODC odc1 = new ODC(usuario, "2026-04-25", "Pendiente");
+        odc1.agregarProducto(productos.get(0)); // Vitrina Futuro
+        odc1.agregarProducto(productos.get(2)); // Escalerilla
+        odcsBase.add(odc1);
+
+        //  ODC 2 
+        ODC odc2 = new ODC(usuario, "2026-04-25", "En proceso");
+        odc2.agregarProducto(productos.get(1)); // Mesa Premium
+        odc2.agregarProducto(productos.get(3)); // Silla
+        odcsBase.add(odc2);
+
+        //  ODC 3 
+        ODC odc3 = new ODC(usuario, "2026-04-25", "Completado");
+        odc3.agregarProducto(productos.get(0)); // Vitrina
+        odc3.agregarProducto(productos.get(1)); // Mesa
+        odc3.agregarProducto(productos.get(2)); // Escalerilla
+        odcsBase.add(odc3);
     }
 
     public static List<ODC> getOdcBase() {

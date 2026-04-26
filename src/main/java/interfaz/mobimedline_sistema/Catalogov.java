@@ -18,9 +18,9 @@ public class Catalogov {
                 101,
                 "Mesa de exploracion",
                 Arrays.asList(
-                        new Insumov("Tapiz", 1),
-                        new Insumov("Perilla", 2),
-                        new Insumov("Tornillos", 4)
+                        new Insumo("Tapiz", 1),
+                        new Insumo("Perilla", 2),
+                        new Insumo("Tornillos", 4)
                 )
         ));
 
@@ -28,9 +28,9 @@ public class Catalogov {
                 102,
                 "Vitrina futuro",
                 Arrays.asList(
-                        new Insumov("Cerradura", 1),
-                        new Insumov("Vidrio", 2),
-                        new Insumov("Remache", 6)
+                        new Insumo("Cerradura", 1),
+                        new Insumo("Vidrio", 2),
+                        new Insumo("Remache", 6)
                 )
         ));
 
@@ -38,9 +38,9 @@ public class Catalogov {
                 103,
                 "Banco",
                 Arrays.asList(
-                        new Insumov("Barriles", 4),
-                        new Insumov("Tapon redondo", 4),
-                            new Insumov("Plato paara banco", 1)
+                        new Insumo("Barriles", 4),
+                        new Insumo("Tapon redondo", 4),
+                            new Insumo("Plato paara banco", 1)
                 )
         ));
     }

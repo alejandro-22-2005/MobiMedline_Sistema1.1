@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import interfaz.mobimedline_sistema.Productov;
+import interfaz.mobimedline_sistema.Producto;
 
 public class AgregarProductoController {
 
@@ -19,15 +19,15 @@ public class AgregarProductoController {
     @FXML 
     private TextField txtCantidadInsumo;
     @FXML 
-    private TableView<Insumov> tablaInsumos;
+    private TableView<Insumo> tablaInsumos;
     @FXML 
-    private TableColumn<Insumov, String> colNombreInsumo;
+    private TableColumn<Insumo, String> colNombreInsumo;
     @FXML 
-    private TableColumn<Insumov, Integer> colCantidadInsumo;
+    private TableColumn<Insumo, Integer> colCantidadInsumo;
     @FXML 
-    private TableColumn<Insumov, Void> colAcciones;
+    private TableColumn<Insumo, Void> colAcciones;
     
-    private ObservableList<Insumov> listaInsumos = FXCollections.observableArrayList();
+    private ObservableList<Insumo> listaInsumos = FXCollections.observableArrayList();
     
 
     @FXML
@@ -42,7 +42,7 @@ public class AgregarProductoController {
             
             {
                 btnEliminar.setOnAction(event -> {
-                    Insumov insumo = getTableView().getItems().get(getIndex());
+                    Insumo insumo = getTableView().getItems().get(getIndex());
                     listaInsumos.remove(insumo);
                 });
             }
@@ -80,7 +80,7 @@ public class AgregarProductoController {
         }
         
         // Crear y agregar insumo
-        Insumov insumo = new Insumov(txtNombreInsumo.getText().trim(), cantidad);
+        Insumo insumo = new Insumo(txtNombreInsumo.getText().trim(), cantidad);
         listaInsumos.add(insumo);
         
         // Limpiar campos de insumo
@@ -105,10 +105,10 @@ public class AgregarProductoController {
         }
         
         // Crear el producto
-        Productov producto = new Productov(txtCodigo.getText().trim(), txtNombre.getText().trim());
+        Producto producto = new Producto(txtCodigo.getText().trim(), txtNombre.getText().trim());
         
         // Agregar todos los insumos
-        for (Insumov insumo : listaInsumos) {
+        for (Insumo insumo : listaInsumos) {
             producto.agregarInsumo(insumo);
         }
         
@@ -120,7 +120,7 @@ public class AgregarProductoController {
         resumen.append("Total de insumos: ").append(producto.getTotalInsumos()).append("\n\n");
         resumen.append("Lista de insumos:\n");
         
-        for (Insumov insumo : producto.getInsumos()) {
+        for (Insumo insumo : producto.getInsumos()) {
             resumen.append("  • ").append(insumo.getNombre())
                    .append(" - ").append(insumo.getCantidadPorUnidad()).append(" unidades\n");
         }

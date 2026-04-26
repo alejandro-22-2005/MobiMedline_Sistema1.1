@@ -21,6 +21,9 @@ public class ODC {
     private final List<Producto> productos;
     private boolean tipoEspecial;
     private Usuarios responsable;
+    private final String fechaODC;
+    private final String estado;
+    
     
     // --- Constructor ---
     public ODC() {
@@ -29,14 +32,18 @@ public class ODC {
         this.productos = new ArrayList<>();
         this.tipoEspecial = false;
         this.responsable = null;
+        this.fechaODC = "";
+        this.estado = "";
     }
     
-    public ODC(Usuarios responsable) {
+    public ODC(Usuarios responsable, String fecha, String estado) {
         // Genera el ID con formato #####-ODC (ej. 00001-ODC)
         this.idODC = String.format("%05d-ODC", contadorSiguiente++);
         this.productos = new ArrayList<>();
         this.tipoEspecial = false;
         this.responsable = responsable;
+        this.fechaODC = fecha;
+        this.estado = estado;
     }
     
     /**

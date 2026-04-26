@@ -116,7 +116,8 @@ public class AgregarUsuarioController implements Initializable {
             // Enviamos los datos (Nombre, Apellidos combinados, Usuario generado y Contraseña)
             secundaryCtrl.recibirDatos(
                 tfNombre.getText(),
-                tfAPaterno.getText() + " " + tfAMaterno.getText(),
+                tfAPaterno.getText(),// + " " + 
+                tfAMaterno.getText(),
                 lblMostrarUsuario.getText(),
                 tfContrasena.getText() 
             );

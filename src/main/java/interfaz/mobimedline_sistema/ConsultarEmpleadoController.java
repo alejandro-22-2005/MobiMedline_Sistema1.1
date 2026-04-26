@@ -40,20 +40,20 @@ public class ConsultarEmpleadoController implements Initializable {
     //TABLA Y COLUMNAS
 
     @FXML
-    private TableColumn<Empleadosj, String> colNombre;
+    private TableColumn<Usuarios, String> colNombre;
 
     @FXML
-    private TableColumn<Empleadosj, String> colPassword;
+    private TableColumn<Usuarios, String> colPassword;
 
     @FXML
-    private TableColumn<Empleadosj, String> colUsuario;
+    private TableColumn<Usuarios, String> colUsuario;
 
     @FXML
-    private TableView<Empleadosj> tblEmpleados;
+    private TableView<Usuarios> tblEmpleados;
     
     //LISTA DE EMPLEADOS QUE SE MUESTRAN EN LA TABLE: Usamos ObservableList para que se actualice con las acciones que hacemos
     
-    private ObservableList<Empleadosj> listaEmpleados = FXCollections.observableArrayList();
+    private ObservableList<Usuarios> listaEmpleados = FXCollections.observableArrayList();
 
    //BOTONES DE ACCIÓN
     
@@ -61,7 +61,7 @@ public class ConsultarEmpleadoController implements Initializable {
     void Editar(ActionEvent event) {
         
         //Objeto del tipo empleados, el cual será seleccionado para efectuar una acción sobre él
-        Empleadosj seleccionado = tblEmpleados.getSelectionModel().getSelectedItem();
+        Usuarios seleccionado = tblEmpleados.getSelectionModel().getSelectedItem();
 
         if (seleccionado == null) {
             System.out.println("Selecciona un registro primero");
@@ -103,7 +103,7 @@ public class ConsultarEmpleadoController implements Initializable {
     @FXML
     void Eliminar(ActionEvent event) {
         
-        Empleadosj seleccionado = tblEmpleados.getSelectionModel().getSelectedItem();
+        Usuarios seleccionado = tblEmpleados.getSelectionModel().getSelectedItem();
         
         if(seleccionado == null){
             Alert alerta = new Alert(Alert.AlertType.WARNING);
@@ -214,7 +214,7 @@ public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin
         //Conectar columnas con datos
         colNombre.setCellValueFactory(new PropertyValueFactory<>("nombre"));
         colUsuario.setCellValueFactory(new PropertyValueFactory<>("usuario"));
-        colPassword.setCellValueFactory(new PropertyValueFactory<>("password"));
+        colPassword.setCellValueFactory(new PropertyValueFactory<>("contraseña"));
         
         //Columnas editables
         colNombre.setCellFactory(TextFieldTableCell.forTableColumn());
@@ -223,29 +223,35 @@ public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin
         
         //Guardar la info ingresada de la modificación
         colNombre.setOnEditCommit(event -> {
-            Empleadosj emp = event.getRowValue();
+            Usuarios emp = event.getRowValue();
             emp.setNombre(event.getNewValue());
             tblEmpleados.refresh();
         });
         
         colUsuario.setOnEditCommit(event -> {
-            Empleadosj emp = event.getRowValue();
+            Usuarios emp = event.getRowValue();
             emp.setUsuario(event.getNewValue());
             tblEmpleados.refresh();
         });
         
         colPassword.setOnEditCommit(event -> {
-            Empleadosj emp = event.getRowValue();
-            emp.setPassword(event.getNewValue());
+            Usuarios emp = event.getRowValue();
+            emp.setContraseña(event.getNewValue());
             tblEmpleados.refresh();
         });
 
         //Le asignamos la lista a la tabla
         tblEmpleados.setItems(listaEmpleados);
+          
+        // Cargar la lista global (Prueba + Manuales)
+        listaEmpleados.clear(); // Limpiamos para evitar duplicados
+        listaEmpleados.addAll(AgendaUsuariosBase.getUsuariosBase());//Autor:Ale
+        
+        tblEmpleados.setItems(listaEmpleados);
 
         // Datos de prueba
-        listaEmpleados.add(new Empleadosj("Juan", "juan123", "1234"));
-        listaEmpleados.add(new Empleadosj("Ana", "ana456", "abcd"));
+        //listaEmpleados.add(new Empleadosj("Juan", "juan123", "1234"));
+        //listaEmpleados.add(new Empleadosj("Ana", "ana456", "abcd"));
     }
     
     

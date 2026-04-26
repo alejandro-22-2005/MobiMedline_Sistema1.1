@@ -36,14 +36,23 @@ public class RecapitulacionUsuarioController {
     @FXML
     private Label lblNombre;
 
-    
+    // Estas variables guardan lo que escribiste manualmente en la ventana anterior Autor:Ale
+    private String nomG, patG, matG, usuG, passG;
     
     /* --- Funciones generales --- */
-    public void recibirDatos(String nombre, String apellidos, String usuario, String pass) {
+    public void recibirDatos(String nombre, String pat, String mat, String usuario, String pass) {
+        
+        // 1. Guardamos en la "memoria" del controlador Autor:Ale
+        this.nomG = nombre;
+        this.patG = pat;
+        this.matG = mat;
+        this.usuG = usuario;
+        this.passG = pass;
+        
         // Aquí asignas los textos a tus Labels de la ventana secundaria
         // Por ejemplo:
         lblMostrarNombre.setText(nombre);
-        lblMostrarApellidos.setText(apellidos);
+        lblMostrarApellidos.setText(pat + " " + mat);
         lblMostrarUsuario.setText(usuario);
         // Para la contraseña, recuerda poner asteriscos por seguridad visual
         lblMostrarContrasena.setText("********"); 
@@ -76,6 +85,15 @@ public class RecapitulacionUsuarioController {
     /* --- Eventos de Boton --- */
     @FXML
     private void AccionConfirmarGuardado(ActionEvent event) {
+        
+        // Usamos los datos manuales para crear el objeto Usuarios
+        Usuarios nuevo = new Usuarios(usuG, nomG, patG, matG, passG);
+    
+        //Lo metemos a la lista donde están los de prueba
+        AgendaUsuariosBase.getUsuariosBase().add(nuevo); 
+        
+        //Autor:Ale
+        
         // --- AQUÍ ES DONDE OCURRE EL GUARDADO REAL ---
         System.out.println("Insertando en la DB al usuario: " + lblMostrarUsuario.getText());
         

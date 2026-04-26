@@ -70,5 +70,15 @@ public class CatalogoProductosBase {
         return productosBase;
     }
     
+    public static Producto buscarPorSku(String skuBuscado){ //función para buscar un producto por sku
+        for(Producto p:productosBase){
+            if(p.getSku().equalsIgnoreCase(skuBuscado)){
+                Producto nuevoProducto = p;
+                return nuevoProducto;
+            }
+        }
+        return null;
+    }
+    
     //falta aplicar funsion de busqueda y aplicar a todos los nombres en mayuscula para eviatar problemas.
 }

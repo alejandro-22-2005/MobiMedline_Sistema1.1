@@ -12,22 +12,22 @@ import java.util.List;
  */
 public class ProductoBasev {
     
-    private int id;
+    private String sku;
     private String descripcion;
     private List<Insumo> insumos;
 
-    public ProductoBasev(int id, String descripcion, List<Insumo> insumos) {
-        this.id = id;
+    public ProductoBasev(String sku, String descripcion, List<Insumo> insumos) {
+        this.sku = sku;
         this.descripcion = descripcion;
         this.insumos = insumos;
     }
 
-    public int getId() {
-        return id;
+    public String getSku() {
+        return sku;
     }
 
-    public void setId(int id) {
-        this.id = id;
+    public void setSku(String sku) {
+        this.sku = sku;
     }
 
     public String getDescripcion() {

@@ -23,6 +23,15 @@ public class Producto {
         this.cantidad = cantidad;
         this.insumos = new ArrayList<>();
     }
+
+    public Producto(String sku, String descripcion, int cantidad, List<Insumo> insumos) {
+        this.sku = sku;
+        this.descripcion = descripcion;
+        this.cantidad = cantidad;
+        this.insumos = insumos;
+    }
+    
+    
     
     public Producto(String nombre) {
         this.sku = String.format("%05d", contadorSiguiente++);
@@ -92,4 +101,5 @@ public class Producto {
         sb.append("]}");
         return sb.toString();
     }
+    
 }

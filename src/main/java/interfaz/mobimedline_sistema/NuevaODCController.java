@@ -91,10 +91,10 @@ public class NuevaODCController implements Initializable {
             return;
         }
 
-        int id;
+        int id; //cambiar etiqueta
         int cantidad;
 
-        try {
+        try {//excepciones
             id = Integer.parseInt(textoId);
             cantidad = Integer.parseInt(textoCantidad);
         } catch (NumberFormatException e) {
@@ -107,18 +107,18 @@ public class NuevaODCController implements Initializable {
             return;
         }
 
-        ProductoBasev productoBase = Catalogo.buscarPorId(id);
+        Producto productoCopia = CatalogoProductosBase.buscarPorSku(textoId);
 
-        if (productoBase == null) {
+        if (productoCopia == null) {
             mostrarAlerta("Producto no encontrado", "No existe un producto con el ID: " + id);
             return;
         }
 
         Producto productoODC = new Producto(
-                productoBase.getId(),
-                productoBase.getDescripcion(),
+                productoCopia.getSku(),
+                productoCopia.getDescripcion(),
                 cantidad,
-                new ArrayList<>(productoBase.getInsumos())
+                new ArrayList<>(productoCopia.getInsumos())
         );
 
         listaProductos.add(productoODC);
@@ -138,7 +138,7 @@ public class NuevaODCController implements Initializable {
     contenido.append("PRODUCTOS REGISTRADOS EN LA LISTA\n\n");
 
     for (Producto producto : listaProductos) {
-        contenido.append("ID: ").append(producto.getId()).append("\n");
+        contenido.append("ID: ").append(producto.getSku()).append("\n");
         contenido.append("Descripción: ").append(producto.getDescripcion()).append("\n");
         contenido.append("Cantidad: ").append(producto.getCantidad()).append("\n");
         contenido.append("-----------------------------\n");

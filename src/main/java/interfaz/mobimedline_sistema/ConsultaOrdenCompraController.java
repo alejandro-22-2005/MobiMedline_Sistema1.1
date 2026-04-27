@@ -62,26 +62,26 @@ public class ConsultaOrdenCompraController implements Initializable {
     private TextField tfIdOrden;
 
     @FXML
-    private TableColumn<Orden, String> tlcEmision;
+    private TableColumn<ODC, String> tlcEmision;
 
     @FXML
-    private TableColumn<Orden, String> tlcEstatus;
+    private TableColumn<ODC, String> tlcEstatus;
 
     @FXML
-    private TableColumn<Orden, String> tlcIdOrden;
+    private TableColumn<ODC, String> tlcIdOrden;
 
     @FXML
-    private TableColumn<Orden, String> tlcResponsable;
+    private TableColumn<ODC, String> tlcResponsable;
 
     @FXML
-    private TableView<Orden> tlvLista;
+    private TableView<ODC> tlvLista;
     
-    private ObservableList<Orden> listaOriginal = FXCollections.observableArrayList();
-    private FilteredList<Orden> listaFiltrada;
+    private ObservableList<ODC> listaOriginal = FXCollections.observableArrayList();
+    private FilteredList<ODC> listaFiltrada;
    
     @FXML
     private void handleVerDetalles(ActionEvent event) {
-        Orden seleccion = tlvLista.getSelectionModel().getSelectedItem();
+        ODC seleccion = tlvLista.getSelectionModel().getSelectedItem();
 
         if (seleccion == null) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -92,11 +92,13 @@ public class ConsultaOrdenCompraController implements Initializable {
 
         StringBuilder detalle = new StringBuilder();
         Map<String, Integer> conteoInsumosTotal = new HashMap<>();
+        
+        List<ODC> copiaODC = ArchivoOdcBase.getOdcBase();
 
         // Verificación de seguridad si la lista de productos es nula
         if (seleccion.getProductos() != null) {
-            for (ProductoAsociado prod : seleccion.getProductos()) {
-                for (Insumo insumo : prod.getInsumosRequeridos()) {
+            for (Producto producto : seleccion.getProductos()) {
+                for (Insumo insumo : producto.getInsumosRequeridos()) {
                     conteoInsumosTotal.put(insumo.getNombre(), 
                         conteoInsumosTotal.getOrDefault(insumo.getNombre(), 0) + insumo.getCantidad());
                 }
@@ -109,11 +111,11 @@ public class ConsultaOrdenCompraController implements Initializable {
 
         detalle.append("\n--- PRODUCTOS ---\n");
         if (seleccion.getProductos() != null) {
-            seleccion.getProductos().forEach(p -> detalle.append("• ").append(p.getNombre()).append("\n"));
+            seleccion.getProductos().forEach(p -> detalle.append("• ").append(p.getDescripcion()).append("\n"));
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalles: " + seleccion.getId());
+        alert.setTitle("Detalles: " + seleccion.getIdODC());
         alert.setHeaderText("Responsable: " + seleccion.getResponsable());
         alert.setContentText(detalle.toString());
         alert.showAndWait();
@@ -137,11 +139,11 @@ public class ConsultaOrdenCompraController implements Initializable {
 
         // Aplicar filtro (Esto siempre sobreescribe el filtro anterior, no lo encadena)
         listaFiltrada.setPredicate(orden -> {
-            boolean matchId = idBusqueda.isEmpty() || orden.getId().toLowerCase().contains(idBusqueda.toLowerCase());
+            boolean matchId = idBusqueda.isEmpty() || orden.getIdODC().toLowerCase().contains(idBusqueda.toLowerCase());
 
-            boolean matchEstado = estadoBusqueda.isEmpty() || orden.getEstatus().equalsIgnoreCase(estadoBusqueda);
+            boolean matchEstado = estadoBusqueda.isEmpty() || orden.getEstado().equalsIgnoreCase(estadoBusqueda);
 
-            boolean matchFecha = (fechaBusqueda == null) || orden.getEmision().equals(fechaBusqueda.toString());
+            boolean matchFecha = (fechaBusqueda == null) || orden.getFechaODC().equals(fechaBusqueda.toString());
 
             return matchId && matchEstado && matchFecha;
         });
@@ -156,7 +158,7 @@ public class ConsultaOrdenCompraController implements Initializable {
         cbEstado.getSelectionModel().clearSelection();
 
         // 2. Restaurar el predicado para mostrar todos los datos
-        listaFiltrada.setPredicate(orden -> true);
+        listaFiltrada.setPredicate(ODC -> true);
 
         // Opcional: Solicitar el foco en el primer campo de búsqueda
         tfIdOrden.requestFocus();
@@ -169,19 +171,19 @@ public class ConsultaOrdenCompraController implements Initializable {
         LocalDate fechaCalendario = dpFechaEmision.getValue();
         String textoFechaManual = dpFechaEmision.getEditor().getText().trim();
 
-        listaFiltrada.setPredicate(orden -> {
+        listaFiltrada.setPredicate(ODC -> {
             // Lógica de ID
-            boolean matchId = idBusqueda.isEmpty() || orden.getId().toLowerCase().contains(idBusqueda);
+            boolean matchId = idBusqueda.isEmpty() || ODC.getIdODC().toLowerCase().contains(idBusqueda);
 
             // Lógica de Estado
-            boolean matchEstado = estadoBusqueda.isEmpty() || orden.getEstatus().equalsIgnoreCase(estadoBusqueda);
+            boolean matchEstado = estadoBusqueda.isEmpty() || ODC.getEstado().equalsIgnoreCase(estadoBusqueda);
 
             // Lógica de Fecha (Prioriza calendario, luego texto manual)
             boolean matchFecha = true;
             if (fechaCalendario != null) {
-                matchFecha = orden.getEmision().equals(fechaCalendario.toString());
+                matchFecha = ODC.getFechaODC().equals(fechaCalendario.toString());
             } else if (!textoFechaManual.isEmpty()) {
-                matchFecha = orden.getEmision().contains(textoFechaManual);
+                matchFecha = ODC.getFechaODC().contains(textoFechaManual);
             }
 
             return matchId && matchEstado && matchFecha;
@@ -191,18 +193,11 @@ public class ConsultaOrdenCompraController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // --- 2. CARGA DE DATOS DE PRUEBA ---
-        List<Insumo> packRed = Arrays.asList(new Insumo("Cable UTP Cat6", 50), new Insumo("Conectores RJ45", 100));
-        List<Insumo> packServer = Arrays.asList(new Insumo("Memoria RAM 32GB", 4), new Insumo("Disco SSD 1TB", 2));
-
-        ProductoAsociado rack = new ProductoAsociado("Rack de Comunicaciones", packRed);
-        ProductoAsociado servidor = new ProductoAsociado("Servidor BD", packServer);
-
         listaOriginal.clear();
-        listaOriginal.addAll(
-            new Orden("ODC-001", "Juan Pérez", "2026-06-23", "Completada", Arrays.asList(rack, servidor)),
-            new Orden("ODC-002", "Ana López", "2026-07-03", "Pendiente", Arrays.asList(servidor)),
-            new Orden("ODC-003", "Carlos Ruíz", "2026-07-12", "Aprobada", new ArrayList<>())
-        );
+        List<ODC> lista = ArchivoOdcBase.getOdcBase();
+        for(ODC o: lista){
+            listaOriginal.add(o);
+        }
 
         // --- 3. CONFIGURACIÓN DE LA TABLA ---
         listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
@@ -229,7 +224,7 @@ public class ConsultaOrdenCompraController implements Initializable {
         
 
         // --- 4. CONFIGURACIÓN DE COMPONENTES DE BÚSQUEDA ---
-        cbEstado.setItems(FXCollections.observableArrayList("Completada", "Pendiente", "Aprobada", "Cancelada"));
+        cbEstado.setItems(FXCollections.observableArrayList("Emitida", "Pendiente"));
 
         // Listener para el ID (Búsqueda en tiempo real mientras escribes)
         tfIdOrden.textProperty().addListener((obs, old, newValue) -> actualizarFiltro());
@@ -255,9 +250,9 @@ public class ConsultaOrdenCompraController implements Initializable {
         private String responsable;
         private String emision;
         private String estatus;
-        private List<ProductoAsociado> productos; // Relación con productos
+        private List<Producto> productos; // Relación con productos
 
-        public Orden(String id, String responsable, String emision, String estatus, List<ProductoAsociado> productos) {
+        public Orden(String id, String responsable, String emision, String estatus, List<Producto> productos) {
             this.id = id;
             this.responsable = responsable;
             this.emision = emision;
@@ -265,7 +260,7 @@ public class ConsultaOrdenCompraController implements Initializable {
             this.productos = productos;
         }
         // Getters...
-        public List<ProductoAsociado> getProductos() { return productos; }
+        public List<Producto> getProductos() { return productos; }
         public String getId() { return id; }
         public String getResponsable() { return responsable; }
         public String getEmision() { return emision; }

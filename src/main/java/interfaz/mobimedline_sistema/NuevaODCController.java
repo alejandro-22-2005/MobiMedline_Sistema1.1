@@ -28,7 +28,7 @@ public class NuevaODCController implements Initializable {
     private TableView<Producto> tablevTabla;
 
     @FXML
-    private TableColumn<Producto, Integer> tcId;
+    private TableColumn<Producto, String> tcId;
 
     @FXML
     private TableColumn<Producto, String> tcDescripcion;
@@ -70,7 +70,7 @@ public class NuevaODCController implements Initializable {
     private final Catalogov Catalogo = new Catalogov();
 
     private void configurarTabla() {
-        tcId.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tcId.setCellValueFactory(new PropertyValueFactory<>("sku"));
         tcDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
         tcCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
 
@@ -91,11 +91,11 @@ public class NuevaODCController implements Initializable {
             return;
         }
 
-        int id; //cambiar etiqueta
+        String id; //cambiar etiqueta
         int cantidad;
 
         try {//excepciones
-            id = Integer.parseInt(textoId);
+            id = textoId;
             cantidad = Integer.parseInt(textoCantidad);
         } catch (NumberFormatException e) {
             mostrarAlerta("Dato inválido", "El ID y la cantidad deben ser números enteros.");
@@ -138,7 +138,7 @@ public class NuevaODCController implements Initializable {
     contenido.append("PRODUCTOS REGISTRADOS EN LA LISTA\n\n");
 
     for (Producto producto : listaProductos) {
-        contenido.append("ID: ").append(producto.getSku()).append("\n");
+        contenido.append("SKU: ").append(producto.getSku()).append("\n");
         contenido.append("Descripción: ").append(producto.getDescripcion()).append("\n");
         contenido.append("Cantidad: ").append(producto.getCantidad()).append("\n");
         contenido.append("-----------------------------\n");

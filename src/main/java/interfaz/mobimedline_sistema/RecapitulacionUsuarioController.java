@@ -115,4 +115,6 @@ public class RecapitulacionUsuarioController {
         Stage stage = (Stage) lblNombre.getScene().getWindow();
         stage.close();
     }
+    
+    
 }

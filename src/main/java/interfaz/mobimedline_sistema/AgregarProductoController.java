@@ -105,7 +105,7 @@ public class AgregarProductoController {
         }
         
         // Crear el producto
-        Producto producto = new Producto(txtCodigo.getText().trim(), txtNombre.getText().trim());
+        Producto producto = new Producto(txtNombre.getText().trim());
         
         // Agregar todos los insumos
         for (Insumo insumo : listaInsumos) {
@@ -115,9 +115,9 @@ public class AgregarProductoController {
         // Mostrar resumen
         StringBuilder resumen = new StringBuilder();
         resumen.append("Producto guardado exitosamente:\n\n");
-        resumen.append("Código: ").append(producto.getCodigo()).append("\n");
-        resumen.append("Nombre: ").append(producto.getNombre()).append("\n");
-        resumen.append("Total de insumos: ").append(producto.getTotalInsumos()).append("\n\n");
+        resumen.append("SKU: ").append(producto.getSku()).append("\n");
+        resumen.append("Nombre: ").append(producto.getDescripcion()).append("\n");
+        //resumen.append("Total de insumos: ").append(producto.getTotalInsumos()).append("\n\n");
         resumen.append("Lista de insumos:\n");
         
         for (Insumo insumo : producto.getInsumos()) {

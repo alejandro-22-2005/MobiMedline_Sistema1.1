@@ -13,7 +13,7 @@ import java.util.List;
  */
 public class AgendaUsuariosBase {
     private static List<Usuarios> usuariosBase = new ArrayList<>();
-    //agregar limite
+    
     // Bloque estático para inicializar los Usuarios base una sola vez
     static {
         // --- Usuario Base: Gerente ---

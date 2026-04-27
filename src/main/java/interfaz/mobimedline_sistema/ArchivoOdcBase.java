@@ -20,25 +20,26 @@ public class ArchivoOdcBase {
         //aqui va las ODC base a mostrar en la expo
         List<Producto> productos = CatalogoProductosBase.getProductosBase();
         List<Usuarios> directorioUsuarios = AgendaUsuariosBase.getUsuariosBase();
+        //aquí se hicieron los cambios
 
         //  ODC 1 
         ODC odc1 = new ODC(directorioUsuarios.get(0), "2026-04-25", "Pendiente");
-        odc1.agregarProducto(productos.get(0)); // Vitrina Futuro
-        odc1.agregarProducto(productos.get(2)); // Escalerilla
-        odcsBase.add(odc1);
+        odc1.actualizarOAgregarProducto(productos.get(0),3); // Vitrina Futuro
+        odc1.actualizarOAgregarProducto(productos.get(2),1); // Escalerilla
+        odcBase.add(odc1);
 
         //  ODC 2 
         ODC odc2 = new ODC(directorioUsuarios.get(1), "2026-04-25", "En proceso");
-        odc2.agregarProducto(productos.get(1)); // Mesa Premium
-        odc2.agregarProducto(productos.get(3)); // Silla
-        odcsBase.add(odc2);
+        odc2.actualizarOAgregarProducto(productos.get(1),4); // Mesa Premium
+        odc2.actualizarOAgregarProducto(productos.get(3),2); // Silla
+        odcBase.add(odc2);
 
         //  ODC 3 
         ODC odc3 = new ODC(directorioUsuarios.get(2), "2026-04-25", "Completado");
-        odc3.agregarProducto(productos.get(0)); // Vitrina
-        odc3.agregarProducto(productos.get(1)); // Mesa
-        odc3.agregarProducto(productos.get(2)); // Escalerilla
-        odcsBase.add(odc3);
+        odc3.actualizarOAgregarProducto(productos.get(0),1); // Vitrina
+        odc3.actualizarOAgregarProducto(productos.get(1),5); // Mesa
+        odc3.actualizarOAgregarProducto(productos.get(2),10); // Escalerilla
+        odcBase.add(odc3);
     }
 
     public static List<ODC> getOdcBase() {

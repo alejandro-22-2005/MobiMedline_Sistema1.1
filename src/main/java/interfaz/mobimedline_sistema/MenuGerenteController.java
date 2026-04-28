@@ -112,7 +112,18 @@ public class MenuGerenteController implements Initializable{
         mostrarVista("NuevaODC"); 
     }
     
-    /* --- Estado de Menu --- */
+//HOLIIIIIIIII, Aqui Trevorcito, les dejo lo de el volver al inicio de sesion al pulsar cerrar sesion :). Besitos
+@FXML
+private void cerrarSesion(MouseEvent event) {
+    try {
+        App.setRoot("IniciarSes");
+    } catch (IOException e) {
+        System.err.println("Error al cerrar sesión: " + e.getMessage());
+        e.printStackTrace();
+    }
+}
+   
+/* --- Estado de Menu --- */
     // cierra el menu por defaul
     private boolean menuAbierto = false;
     
@@ -211,6 +222,10 @@ public class MenuGerenteController implements Initializable{
         //Asignar eventos a los títulos
         lblOrdenCompraCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubOrden));
         lblProductoCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubProducto));
-        lblUsuarioCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubUsuario));   
+        lblUsuarioCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubUsuario)); 
+        
+        //Trevor estuvo aquí
+        //Se esta usando para el evento de cerrar sesion
+        lblCerrarSesion.setOnMouseClicked(this::cerrarSesion);
     }
 }

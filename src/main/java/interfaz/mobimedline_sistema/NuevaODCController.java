@@ -67,7 +67,7 @@ public class NuevaODCController implements Initializable {
     
 
     private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
-    private final Catalogov Catalogo = new Catalogov();
+    //private final Catalogov Catalogo = new Catalogov();
 
     private void configurarTabla() {
         tcId.setCellValueFactory(new PropertyValueFactory<>("sku"));

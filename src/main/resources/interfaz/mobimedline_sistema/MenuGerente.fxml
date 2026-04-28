@@ -79,7 +79,6 @@
                                        </cursor>
                                     </Label>
                                     <Label fx:id="lblHistorialOrden" onMouseClicked="#irConsultaOrden" styleClass="Menu-Opciones" text="Consultar ODC" />
-                                    <Label fx:id="lblGestionOrden" styleClass="Menu-Opciones" text="Gestion de ODC" />
                                  </children>
                               </VBox>
                            </children>

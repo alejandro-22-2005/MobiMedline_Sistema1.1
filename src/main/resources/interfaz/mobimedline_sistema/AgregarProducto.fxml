@@ -19,7 +19,7 @@
          <children>
             <VBox spacing="3">
                <children>
-                  <Label style="-fx-font-size: 18px;" styleClass="Texto-remarcado-azul" text="Agregar producto" />
+                  <Label style="-fx-font-size: 18px;" styleClass="Texto-remarcado-azul-titulo" text="Agregar producto" />
                   <Label style="-fx-text-fill: #888888; -fx-font-size: 10px;" styleClass="Texto" text="Completa los campos para registrar un nuevo producto con sus insumos." />
                </children>
             </VBox>
@@ -37,8 +37,6 @@
                         <RowConstraints />
                      </rowConstraints>
                      <children>
-                        <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="SKU:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
-                        <TextField fx:id="txtCodigo" promptText="Ej: PROD-001" styleClass="Campo-Texto-redondo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                         <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="Nombre del producto:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
                         <TextField fx:id="txtNombre" promptText="Nombre del producto" styleClass="Campo-Texto-redondo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                      </children>
@@ -53,13 +51,13 @@
                      <children>
                         <VBox spacing="3" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label style="-fx-font-size: 10px;" text="Nombre del insumo:" />
+                              <Label style="-fx-font-size: 10px;" styleClass="Texto" text="Nombre del insumo:" />
                               <TextField fx:id="txtNombreInsumo" promptText="Ej: Tela, Hilo" styleClass="Campo-Texto-redondo" />
                            </children>
                         </VBox>
                         <VBox spacing="3" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label style="-fx-font-size: 10px;" text="Cantidad:" />
+                              <Label style="-fx-font-size: 10px;" styleClass="Texto" text="Cantidad:" />
                               <HBox alignment="CENTER_LEFT" spacing="6">
                                  <children>
                                     <TextField fx:id="txtCantidadInsumo" promptText="Ej: 10" styleClass="Campo-Texto-redondo" HBox.hgrow="ALWAYS" />

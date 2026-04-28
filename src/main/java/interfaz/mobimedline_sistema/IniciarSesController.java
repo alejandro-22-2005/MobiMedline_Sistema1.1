@@ -17,57 +17,44 @@ public class IniciarSesController {
     @FXML
     private PasswordField passfiCon;
 
-    @FXML
-    private void handleLogin() {
-        String user = tfnombreUs.getText().trim();
-        String pass = passfiCon.getText().trim();
-        
-        // En esta parte de aquí, se hace una validacion para campos vacios
-        if (user.isEmpty() || pass.isEmpty()) {
-            mostrarAlerta("No llenaste un campo", "Por favor, verifica que ingresaste bien tus datos.");
-        } else {
-            System.out.println("Intento de login: " + user);
-        }
+  @FXML
+private void handleLogin() {
+    String user = tfnombreUs.getText().trim();
+    String pass = passfiCon.getText().trim();
     
-        //SE MANDA A LLAMAR LA "BASE" de usuarios
+    if (user.isEmpty() || pass.isEmpty()) {
+        mostrarAlerta("No llenaste un campo", "Por favor, verifica tus datos.");
+        return; 
+    }
+
     List<Usuarios> listaUsuarios = AgendaUsuariosBase.getUsuariosBase();
     boolean loginExitoso = false;
     
-    for(Usuarios u : listaUsuarios) {
-    
-    if (u.getUsuario().equals(user)&& u.getContraseña().equals(pass)){
-    loginExitoso = true;
+    for (Usuarios u : listaUsuarios) {
+        if (u.getUsuario().equals(user) && u.getContraseña().equals(pass)) {
+            loginExitoso = true;
+            
+            try {
+                if (u.getPermisos()) { // Es true (Gerente)
+                    System.out.println("Iniciando sesión como Gerente: " + u.getNombre());
+                    App.setRoot("MenuGerente"); 
+                } else { // Es false (Empleado)
+                    System.out.println("Iniciando sesión como Empleado: " + u.getNombre());
+                    App.setRoot("MenuVentas");
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+                mostrarAlerta("ERROR DE SISTEMA", "No se pudo cargar la ventana.");
+            }
+            break;
         }
- 
-    
-    //Coneccion a Permisos
-    
-    try {
-        if (u.getPermisos() == true ){
-            System.out.println("Iniciando sesion como Gerente, Bienvenido :) :" + u.getNombre());
-    }else {
-        
-            System.out.println("Iniciando sesion como Empleado, bienvenido: " + u.getNombre());
-            App.setRoot("MenuVentas");
-
-        }
-        
-        }catch (IOException e){
-        e.printStackTrace();
-        mostrarAlerta("ERROR DE SISTEMA", "No se pudo cargar la siguiente ventana :(");
-        }
-        break;
-
     }
     
     if (!loginExitoso) {
-    mostrarAlerta ("Credencial incorrecta", "La contraseña o el usuario son incorrectos, verifica tu informacion");
-    passfiCon.clear();
-    
-                }
-    
-    
+        mostrarAlerta("Credencial incorrecta", "Usuario o contraseña no válidos.");
+        passfiCon.clear();
     }
+}
     
     
     private void mostrarAlerta(String titulo, String mensaje) {

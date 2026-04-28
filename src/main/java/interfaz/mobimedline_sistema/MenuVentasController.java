@@ -59,12 +59,92 @@ public class MenuVentasController implements Initializable{
     @FXML
     private VBox vbSubProducto;
     
+    private Label labelSeleccionado;
+    
     /* --- Eventos de las opciones del menu --- */
     @FXML
     private void irConsultaOrden(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("ConsultaOrdenCompra"); 
     }
     
+    @FXML
+    private void irDashboard(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
+        mostrarVista("Dashboard"); 
+    }
+    
+    @FXML
+    private void irNuevaODC(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
+        mostrarVista("NuevaODC"); 
+    }
+    
+    @FXML
+    private void irCatalogo(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
+        mostrarVista("Catalogo"); 
+    }
+    
+    //HOLIIIIIIIII, Aqui Trevorcito, les dejo lo de el volver al inicio de sesion :). Besitos
+    @FXML
+    private void cerrarSesion(MouseEvent event) {
+        try {
+            App.setRoot("IniciarSes");
+        } catch (IOException e) {
+            System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
     /* --- Estado de Menu --- */
     // cierra el menu por defaul
     private boolean menuAbierto = false;
@@ -140,6 +220,15 @@ public class MenuVentasController implements Initializable{
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+            // 1. Cargar la vista del Dashboard automáticamente al iniciar
+        mostrarVista("Dashboard");
+
+        // 2. Aplicar el estilo visual de selección inicial
+        if (lblDashboard != null) {
+            lblDashboard.getStyleClass().add("Menu-activo");
+            labelSeleccionado = lblDashboard;
+        }
+        
         // 1. Configuración inicial: Invisible y no ocupa espacio
         apMenu.setVisible(false);
         apMenu.setManaged(false);
@@ -162,5 +251,9 @@ public class MenuVentasController implements Initializable{
         // 2. Asignar eventos a los títulos
         lblOrdenCompraCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubOrden));
         lblProductoCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubProducto));
+        
+        //Trevor estuvo aquí
+        //Se esta usando para el evento de cerrar sesion
+        lblCerrarSesion.setOnMouseClicked(this::cerrarSesion);
     }
 }

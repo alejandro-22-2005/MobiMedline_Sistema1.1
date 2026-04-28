@@ -4,10 +4,12 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.animation.TranslateTransition;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
@@ -77,42 +79,165 @@ public class MenuGerenteController implements Initializable{
     @FXML
     private VBox vbSubUsuario;
     
+    private Label labelSeleccionado;
     
     /* --- Eventos de las opciones del menu --- */
     @FXML
     private void irAgregarUsuario(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("AgregarUsuario"); 
     }
     
     @FXML
     private void irConsultaOrden(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("ConsultaOrdenCompra"); 
     }
     
     @FXML
     private void irAgregarProducto(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("AgregarProducto"); 
     }
     @FXML
     private void irCatalogo(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("ConsultarProducto"); 
     }
      @FXML
     private void irDashboard(MouseEvent event) {
-        mostrarVista("MenuPrincipal"); 
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
+        mostrarVista("Dashboard"); 
     }
     
        @FXML
     private void irConsultarEmpleado(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("ConsultarEmpleado"); 
     }
     
        @FXML
     private void irNuevaODC(MouseEvent event) {
+            // 1. Identificar el label que recibió el clic
+        Label labelPresionado = (Label) event.getSource();
+
+        // 2. Limpiar el estilo del label anterior (si existe)
+        if (labelSeleccionado != null) {
+            labelSeleccionado.getStyleClass().remove("Menu-activo");
+        }
+
+        // 3. Aplicar el estilo de "activo" al nuevo label
+        labelPresionado.getStyleClass().add("Menu-activo");
+
+        // 4. Actualizar la referencia para la siguiente vez
+        labelSeleccionado = labelPresionado;
         mostrarVista("NuevaODC"); 
     }
     
-    /* --- Estado de Menu --- */
+    private Button botonActivo; // Variable para rastrear el botón seleccionado
+
+    @FXML
+    private void manejarSeleccionMenu(ActionEvent event) {
+        Button botonPresionado = (Button) event.getSource();
+
+        // 1. Si ya había un botón seleccionado, quitarle el estilo de "activo"
+        if (botonActivo != null) {
+            botonActivo.getStyleClass().remove("Menu-activo");
+        }
+
+        // 2. Aplicar el estilo al botón que acabas de presionar
+        botonPresionado.getStyleClass().add("Menu-activo");
+
+        // 3. Actualizar la referencia del botón activo
+        botonActivo = botonPresionado;
+
+        // Aquí va tu lógica para cambiar de vista (switch/case o mostrarVista)
+    }
+    
+    //HOLIIIIIIIII, Aqui Trevorcito, les dejo lo de el volver al inicio de sesion al pulsar cerrar sesion :). Besitos
+    @FXML
+    private void cerrarSesion(MouseEvent event) {
+        try {
+            App.setRoot("IniciarSes");
+        } catch (IOException e) {
+            System.err.println("Error al cerrar sesión: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
+/* --- Estado de Menu --- */
     // cierra el menu por defaul
     private boolean menuAbierto = false;
     
@@ -186,6 +311,14 @@ public class MenuGerenteController implements Initializable{
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+            // 1. Cargar la vista del Dashboard automáticamente al iniciar
+        mostrarVista("Dashboard");
+
+        // 2. Aplicar el estilo visual de selección inicial
+        if (lblDashboard != null) {
+            lblDashboard.getStyleClass().add("Menu-activo");
+            labelSeleccionado = lblDashboard;
+        }
         // Configuración inicial: Invisible y no ocupa espacio
         apMenu.setVisible(false);
         apMenu.setManaged(false);
@@ -211,6 +344,10 @@ public class MenuGerenteController implements Initializable{
         //Asignar eventos a los títulos
         lblOrdenCompraCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubOrden));
         lblProductoCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubProducto));
-        lblUsuarioCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubUsuario));   
+        lblUsuarioCategoria.setOnMouseClicked(event -> toggleSeccion(vbSubUsuario)); 
+        
+        //Trevor estuvo aquí
+        //Se esta usando para el evento de cerrar sesion
+        lblCerrarSesion.setOnMouseClicked(this::cerrarSesion);
     }
 }

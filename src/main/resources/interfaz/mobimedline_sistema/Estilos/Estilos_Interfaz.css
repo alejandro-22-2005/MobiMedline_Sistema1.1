@@ -35,6 +35,14 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-padding: 20 0 20 0;
 }
 
+/* --- Estado seleccionado para el menú --- */
+.Menu-activo {
+    -fx-background-color: rgba(255, 255, 255, 0.15); /* Un poco más brillante que el hover */
+    -fx-text-fill: white; /* Texto totalmente blanco */
+    -fx-border-color: #3498db; /* Opcional: una línea azul de acento */
+    -fx-border-width: 0 0 0 4; /* Línea solo a la izquierda */
+}
+
 .Menu-Categoria {
     -fx-text-fill: white;
     -fx-font-family: 'Roboto';

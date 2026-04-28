@@ -47,7 +47,7 @@
                      <children>
                         <VBox prefHeight="63.0" prefWidth="210.0">
                            <children>
-                              <Label fx:id="lblDashboard" styleClass="Menu-Categoria-Opcion" text="Dashboard">
+                              <Label fx:id="lblDashboard" onMouseClicked="#irDashboard" styleClass="Menu-Categoria-Opcion" text="Dashboard">
                                  <graphic>
                                     <ImageView fitHeight="16.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
                                        <image>
@@ -73,7 +73,7 @@
                               </Label>
                               <VBox fx:id="vbSubOrden" prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <Label fx:id="lblNuevaOrden" alignment="CENTER" styleClass="Menu-Opciones" text="Nueva ODC" textAlignment="CENTER">
+                                    <Label fx:id="lblNuevaOrden" alignment="CENTER" onMouseClicked="#irNuevaODC" styleClass="Menu-Opciones" text="Nueva ODC" textAlignment="CENTER">
                                        <cursor>
                                           <Cursor fx:constant="HAND" />
                                        </cursor>
@@ -95,7 +95,7 @@
                                  </graphic></Label>
                               <VBox fx:id="vbSubProducto" prefHeight="200.0" prefWidth="100.0">
                                  <children>
-                                    <Label fx:id="lblModificarProducto" styleClass="Menu-Opciones" text="Catálogo" />
+                                    <Label fx:id="lblModificarProducto" onMouseClicked="#irCatalogo" styleClass="Menu-Opciones" text="Catálogo" />
                                  </children>
                               </VBox>
                            </children>

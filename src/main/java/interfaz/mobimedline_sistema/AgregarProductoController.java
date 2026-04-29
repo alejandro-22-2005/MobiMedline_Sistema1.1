@@ -150,12 +150,12 @@ public class AgregarProductoController {
     }
 
     private void limpiarTodo() {
-        txtCodigo.clear();
+        //txtCodigo.clear();
         txtNombre.clear();
         txtNombreInsumo.clear();
         txtCantidadInsumo.clear();
         listaInsumos.clear();
-        txtCodigo.requestFocus();
+        //txtCodigo.requestFocus();
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {

@@ -187,6 +187,14 @@ public class ODC {
     public Usuarios getResponsable() {
         return responsable;
     }
+
+    public String getEstado() {
+        return estado;
+    }
+
+    public String getFechaODC() {
+        return fechaODC;
+    }
     
     // --- Setters    
     public void setTipoEspecial(boolean tipo){

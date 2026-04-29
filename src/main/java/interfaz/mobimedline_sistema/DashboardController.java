@@ -58,10 +58,10 @@ public class DashboardController implements Initializable {
                 case "Pendiente":
                     pendientes++;
                     break;
-                case "Procesada":
+                case "Emitida":
                     procesadas++;
                     break;
-                case "Especial":
+                case "En Proceso":
                     especiales++;
                     break;
             }

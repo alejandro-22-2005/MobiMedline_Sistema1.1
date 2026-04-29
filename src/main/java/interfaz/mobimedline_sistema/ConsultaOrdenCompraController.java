@@ -84,70 +84,78 @@ public class ConsultaOrdenCompraController implements Initializable {
         ODC seleccion = tlvLista.getSelectionModel().getSelectedItem();
 
         if (seleccion == null) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Seleccione una orden de la lista.");
-            alert.showAndWait();
+            // ... alerta de selección vacía ...
             return;
         }
 
         StringBuilder detalle = new StringBuilder();
         Map<String, Integer> conteoInsumosTotal = new HashMap<>();
-        
-        List<ODC> copiaODC = ArchivoOdcBase.getOdcBase();
-        List<Producto> copiaProductos = CatalogoProductosBase.getProductosBase();
 
-        // Verificación de seguridad si la lista de productos es nula
-        if (seleccion.getProductos() != null) {
-            for (Producto producto : seleccion.getProductos()) {
-                for (Insumo insumo : producto.getInsumos()) {
-                    conteoInsumosTotal.put(insumo.getNombre(), 
-                        conteoInsumosTotal.getOrDefault(insumo.getNombre(), 0) + insumo.getCantidadPorUnidad());
-                }
-            }
+        // Usamos el método que ya programaste en ODC para no repetir lógica
+        List<Insumo> totales = seleccion.obtenerTotalesPorId();
+
+        detalle.append("--- RESUMEN DE INSUMOS TOTALES ---\n");
+        for (Insumo i : totales) {
+            detalle.append("- ").append(i.getNombre())
+                   .append(": ").append(i.getCantidadPorUnidad()).append(" unidades\n");
         }
 
-        detalle.append("--- RESUMEN DE INSUMOS ---\n");
-        conteoInsumosTotal.forEach((nombre, cantidad) -> 
-            detalle.append("- ").append(nombre).append(": ").append(cantidad).append(" unidades\n"));
-
-        detalle.append("\n--- PRODUCTOS ---\n");
-        if (seleccion.getProductos() != null) {
-            seleccion.getProductos().forEach(p -> detalle.append("• ").append(p.getDescripcion()).append("\n"));
+        detalle.append("\n--- PRODUCTOS EN ESTA ORDEN ---\n");
+        for (Producto p : seleccion.getProductos()) {
+            // Usamos getDescripcion() y getCantidad() que están en tu clase Producto
+            detalle.append("• ").append(p.getDescripcion())
+                   .append(" (Cant: ").append(p.getCantidad()).append(")\n");
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle("Detalles: " + seleccion.getIdODC());
-        alert.setHeaderText("responsable: " + seleccion.getResponsable().getUsuario());
+        alert.setTitle("Detalles de Orden: " + seleccion.getIdODC());
+        // Acceso correcto al objeto Usuarios responsable
+        alert.setHeaderText("Responsable: " + seleccion.getResponsable().getNombre() + 
+                           " (" + seleccion.getResponsable().getUsuario() + ")");
         alert.setContentText(detalle.toString());
         alert.showAndWait();
     }
     
     @FXML
     private void handleBuscar(ActionEvent event) {
-        String idBusqueda = tfIdOrden.getText().trim();
-        LocalDate fechaBusqueda = dpFechaEmision.getValue();
+        String idBusqueda = tfIdOrden.getText().trim().toLowerCase();
         Object estadoObj = cbEstado.getValue();
         String estadoBusqueda = (estadoObj != null) ? estadoObj.toString() : "";
 
-        // Validar campos vacíos
-        if (idBusqueda.isEmpty() && fechaBusqueda == null && estadoBusqueda.isEmpty()) {
+        // 1. Obtener la fecha del DatePicker
+        LocalDate fechaSeleccionada = dpFechaEmision.getValue();
+
+        // Validación de campos vacíos
+        if (idBusqueda.isEmpty() && fechaSeleccionada == null && estadoBusqueda.isEmpty()) {
             Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Por favor, llene al menos un campo para realizar la búsqueda.");
+            alert.setContentText("Por favor, ingrese un criterio de búsqueda.");
             alert.showAndWait();
-            // Opcional: listaFiltrada.setPredicate(p -> true); // Mostrar todo si está vacío
             return;
         }
 
-        // Aplicar filtro (Esto siempre sobreescribe el filtro anterior, no lo encadena)
         listaFiltrada.setPredicate(orden -> {
-            boolean matchId = idBusqueda.isEmpty() || orden.getIdODC().toLowerCase().contains(idBusqueda.toLowerCase());
+            // Filtro por ID y Estado
+            boolean matchId = idBusqueda.isEmpty() || 
+                             orden.getIdODC().toLowerCase().contains(idBusqueda);
+            boolean matchEstado = estadoBusqueda.isEmpty() || 
+                                 orden.getEstado().equalsIgnoreCase(estadoBusqueda);
 
-            boolean matchEstado = estadoBusqueda.isEmpty() || orden.getEstado().equalsIgnoreCase(estadoBusqueda);
-
-            boolean matchFecha = (fechaBusqueda == null) || orden.getFechaODC().equals(fechaBusqueda.toString());
+            // 2. Filtro por Fecha con NORMALIZACIÓN
+            boolean matchFecha = true;
+            if (fechaSeleccionada != null) {
+                /* Si tu ODC guarda la fecha como "2026-04-25", 
+                   fechaSeleccionada.toString() devolverá exactamente "2026-04-25".
+                   Usamos .trim() para evitar errores por espacios invisibles.
+                */
+                String fechaAComparar = fechaSeleccionada.toString(); 
+                matchFecha = orden.getFechaODC().contains(fechaSeleccionada.toString());
+            }
 
             return matchId && matchEstado && matchFecha;
         });
+
+        // 3. Forzar actualización de la tabla (opcional pero recomendado)
+        tlvLista.refresh();
     }
     
     @FXML
@@ -169,129 +177,78 @@ public class ConsultaOrdenCompraController implements Initializable {
         String idBusqueda = tfIdOrden.getText().trim().toLowerCase();
         String estadoBusqueda = (cbEstado.getValue() != null) ? cbEstado.getValue() : "";
 
+        // Obtenemos el valor del calendario
         LocalDate fechaCalendario = dpFechaEmision.getValue();
+        // Obtenemos lo que el usuario escribe manualmente (por si acaso)
         String textoFechaManual = dpFechaEmision.getEditor().getText().trim();
 
-        listaFiltrada.setPredicate(ODC -> {
-            // Lógica de ID
-            boolean matchId = idBusqueda.isEmpty() || ODC.getIdODC().toLowerCase().contains(idBusqueda);
+        listaFiltrada.setPredicate(orden -> {
+            // 1. Lógica de ID
+            boolean matchId = idBusqueda.isEmpty() || 
+                             orden.getIdODC().toLowerCase().contains(idBusqueda);
 
-            // Lógica de Estado
-            boolean matchEstado = estadoBusqueda.isEmpty() || ODC.getEstado().equalsIgnoreCase(estadoBusqueda);
+            // 2. Lógica de Estado
+            boolean matchEstado = estadoBusqueda.isEmpty() || 
+                                 orden.getEstado().equalsIgnoreCase(estadoBusqueda);
 
-            // Lógica de Fecha (Prioriza calendario, luego texto manual)
+            // 3. Lógica de Fecha (EL PUNTO CRÍTICO)
             boolean matchFecha = true;
+            
+            // Si el usuario seleccionó una fecha en el calendario
             if (fechaCalendario != null) {
-                matchFecha = ODC.getFechaODC().equals(fechaCalendario.toString());
-            } else if (!textoFechaManual.isEmpty()) {
-                matchFecha = ODC.getFechaODC().contains(textoFechaManual);
+                /* IMPORTANTE: Comparamos el String almacenado en la ODC 
+                   con el String generado por el DatePicker (ISO_LOCAL_DATE: yyyy-MM-dd).
+                */
+                matchFecha = orden.getFechaODC().equals(fechaCalendario.toString());
+            } 
+            // Si no hay fecha en el calendario pero hay texto manual (ej. el usuario borró o escribió)
+            else if (!textoFechaManual.isEmpty()) {
+                matchFecha = orden.getFechaODC().contains(textoFechaManual);
             }
 
             return matchId && matchEstado && matchFecha;
         });
     }
     
+    private void configurarColumnas() {
+        // Configuración de celdas existente
+        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
+        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
+        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
+
+        // --- AGREGAR ESTO PARA CENTRAR ---
+        tlcIdOrden.setStyle("-fx-alignment: CENTER;");
+        tlcEmision.setStyle("-fx-alignment: CENTER;");
+        tlcEstatus.setStyle("-fx-alignment: CENTER;");
+        tlcResponsable.setStyle("-fx-alignment: CENTER;");
+
+        // Tu lógica existente para el responsable
+        tlcResponsable.setCellValueFactory(cellData -> {
+            Usuarios resp = cellData.getValue().getResponsable();
+            return new javafx.beans.property.SimpleStringProperty(resp != null ? resp.getUsuario() : "N/A");
+        });
+    }
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // --- 2. CARGA DE DATOS DE PRUEBA ---
+        // 1. Cargar datos
         listaOriginal.clear();
-        List<ODC> lista = ArchivoOdcBase.getOdcBase();
-        for(ODC o: lista){
-            listaOriginal.add(o);
+        List<ODC> datosCargados = ArchivoOdcBase.getOdcBase();
+        if (datosCargados != null) {
+            listaOriginal.addAll(datosCargados);
         }
 
-        // --- 3. CONFIGURACIÓN DE LA TABLA ---
+        // 2. Configurar la tabla y el filtro inicial (mostrar todo)
         listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
         tlvLista.setItems(listaFiltrada);
 
-        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
-        tlcResponsable.setCellValueFactory(new PropertyValueFactory<>("responsable"));
-        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
-        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        
-        /*agregado*/
-        
-        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
-        tlcIdOrden.setReorderable(false);
+        // 3. Configurar columnas (Responsable, etc.)
+        configurarColumnas();
 
-        tlcResponsable.setCellValueFactory(new PropertyValueFactory<>("responsable"));
-        tlcResponsable.setReorderable(false);
-
-        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
-        tlcEmision.setReorderable(false);
-
-        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
-        tlcEstatus.setReorderable(false);
-        
-
-        // --- 4. CONFIGURACIÓN DE COMPONENTES DE BÚSQUEDA ---
+        // 4. Configurar ComboBox
         cbEstado.setItems(FXCollections.observableArrayList("Emitida", "Pendiente"));
 
-        // Listener para el ID (Búsqueda en tiempo real mientras escribes)
-        tfIdOrden.textProperty().addListener((obs, old, newValue) -> actualizarFiltro());
-
-        // Listener para el ComboBox de Estado
-        cbEstado.valueProperty().addListener((obs, old, newValue) -> actualizarFiltro());
-
-        // Listener para el Calendario (Cuando eliges una fecha con el mouse)
-        dpFechaEmision.valueProperty().addListener((obs, old, newValue) -> actualizarFiltro());
-
-        // Listener para el Editor del DatePicker (Cuando escribes la fecha o la borras)
-        dpFechaEmision.getEditor().textProperty().addListener((obs, old, newValue) -> {
-            if (newValue == null || newValue.trim().isEmpty()) {
-                dpFechaEmision.setValue(null); // Sincroniza el valor interno si se borra el texto
-            }
-            actualizarFiltro();
-        });
-    }  
-    
-    // Clase Orden actualizada
-    /*public static class Orden {
-        private String id;
-        private String responsable;
-        private String emision;
-        private String estatus;
-        private List<Producto> productos; // Relación con productos
-
-        public Orden(String id, String responsable, String emision, String estatus, List<Producto> productos) {
-            this.id = id;
-            this.responsable = responsable;
-            this.emision = emision;
-            this.estatus = estatus;
-            this.productos = productos;
-        }
-        // Getters...
-        public List<Producto> getProductos() { return productos; }
-        public String getId() { return id; }
-        public String getResponsable() { return responsable; }
-        public String getEmision() { return emision; }
-        public String getEstatus() { return estatus; }
-    }
-    
-    // Clase para los Insumos (ej. Tornillos, Cables, Pasta térmica)
-    public static class Insumo {
-        private String nombre;
-        private int cantidad;
-
-        public Insumo(String nombre, int cantidad) {
-            this.nombre = nombre;
-            this.cantidad = cantidad;
-        }
-        public String getNombre() { return nombre; }
-        public int getCantidad() { return cantidad; }
-    }
-
-    // Clase para los Productos (ej. Servidor, PC Gamer, Tablero Eléctrico)
-    public static class ProductoAsociado {
-        private String nombre;
-        private List<Insumo> insumosRequeridos;
-
-        public ProductoAsociado(String nombre, List<Insumo> insumos) {
-            this.nombre = nombre;
-            this.insumosRequeridos = insumos;
-        }
-        public String getNombre() { return nombre; }
-        public List<Insumo> getInsumosRequeridos() { return insumosRequeridos; }
-    }*/
-    
+        // IMPORTANTE: Aquí NO agregues listeners a tfIdOrden ni a dpFechaEmision.
+        // Al no tener listeners, la tabla no se moverá hasta que presiones el botón.
+    } 
 }

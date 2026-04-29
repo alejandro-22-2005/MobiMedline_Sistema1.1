@@ -25,9 +25,6 @@ public class RecapitulacionUsuarioController {
     private Label lblMostrarApellidos;
 
     @FXML
-    private Label lblMostrarContrasena;
-
-    @FXML
     private Label lblMostrarNombre;
 
     @FXML
@@ -54,8 +51,6 @@ public class RecapitulacionUsuarioController {
         lblMostrarNombre.setText(nombre);
         lblMostrarApellidos.setText(pat + " " + mat);
         lblMostrarUsuario.setText(usuario);
-        // Para la contraseña, recuerda poner asteriscos por seguridad visual
-        lblMostrarContrasena.setText("********"); 
     }
     
     public class ResumenController {
@@ -75,7 +70,6 @@ public class RecapitulacionUsuarioController {
             lblMostrarNombre.setText(nom);
             lblMostrarApellidos.setText(pat + " " + mat);
             lblMostrarUsuario.setText(usu);
-            lblMostrarContrasena.setText("********"); // Por seguridad, no mostramos la clave real aquí
         }
 
     }

@@ -8,7 +8,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import interfaz.mobimedline_sistema.Producto;
 
-public class AgregarProductoController {
+public class AgregarProductoController {//clase para agregar porductos
 
     @FXML 
     private TextField txtCodigo;

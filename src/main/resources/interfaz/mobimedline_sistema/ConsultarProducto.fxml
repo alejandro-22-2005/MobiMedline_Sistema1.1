@@ -33,9 +33,7 @@
             </HBox>
             <HBox alignment="CENTER" spacing="10.0">
                <children>
-                  <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="Texto" text="SKU:" />
-                  <TextField fx:id="txtSku" styleClass="Campo-Texto-redondo" HBox.hgrow="ALWAYS" />
-                  <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="Texto" text="Insumo:" />
+                  <Label minHeight="-Infinity" minWidth="-Infinity" styleClass="Texto" text="Producto" />
                   <TextField fx:id="txtNombre" styleClass="Campo-Texto-redondo" HBox.hgrow="ALWAYS" />
                </children>
             </HBox>
@@ -68,8 +66,8 @@
       </HBox>
       <HBox alignment="CENTER" layoutX="28.0" layoutY="360.0" prefHeight="38.0" prefWidth="383.0" spacing="10.0" AnchorPane.bottomAnchor="14.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="20.0">
          <children>
-            <Button fx:id="btnModificar" minHeight="-Infinity" minWidth="-Infinity" styleClass="Boton-Azul" text="Modificar" />
-            <Button fx:id="BtnGuardar" minHeight="-Infinity" minWidth="-Infinity" styleClass="Boton-Azul" text="Guardar" />
+            <Button fx:id="btnModificar" minHeight="-Infinity" minWidth="-Infinity" onAction="#modificar" styleClass="Boton-Azul" text="Modificar" />
+            <Button fx:id="BtnGuardar" minHeight="-Infinity" minWidth="-Infinity" onAction="#guardar" styleClass="Boton-Azul" text="Guardar" />
             <Button fx:id="btnEliminar" minHeight="-Infinity" minWidth="-Infinity" onAction="#eliminar" styleClass="Boton-Rojo" text="Eliminar" />
          </children>
       </HBox>

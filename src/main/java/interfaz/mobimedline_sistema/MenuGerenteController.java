@@ -79,6 +79,7 @@ public class MenuGerenteController implements Initializable{
     @FXML
     private VBox vbSubUsuario;
     
+    
     private Label labelSeleccionado;
     
     /* --- Eventos de las opciones del menu --- */
@@ -190,6 +191,7 @@ public class MenuGerenteController implements Initializable{
     
        @FXML
     private void irNuevaODC(MouseEvent event) {
+        
             // 1. Identificar el label que recibió el clic
         Label labelPresionado = (Label) event.getSource();
 
@@ -200,30 +202,11 @@ public class MenuGerenteController implements Initializable{
 
         // 3. Aplicar el estilo de "activo" al nuevo label
         labelPresionado.getStyleClass().add("Menu-activo");
-
+        
         // 4. Actualizar la referencia para la siguiente vez
         labelSeleccionado = labelPresionado;
+        
         mostrarVista("NuevaODC"); 
-    }
-    
-    private Button botonActivo; // Variable para rastrear el botón seleccionado
-
-    @FXML
-    private void manejarSeleccionMenu(ActionEvent event) {
-        Button botonPresionado = (Button) event.getSource();
-
-        // 1. Si ya había un botón seleccionado, quitarle el estilo de "activo"
-        if (botonActivo != null) {
-            botonActivo.getStyleClass().remove("Menu-activo");
-        }
-
-        // 2. Aplicar el estilo al botón que acabas de presionar
-        botonPresionado.getStyleClass().add("Menu-activo");
-
-        // 3. Actualizar la referencia del botón activo
-        botonActivo = botonPresionado;
-
-        // Aquí va tu lógica para cambiar de vista (switch/case o mostrarVista)
     }
     
     //HOLIIIIIIIII, Aqui Trevorcito, les dejo lo de el volver al inicio de sesion al pulsar cerrar sesion :). Besitos
@@ -237,7 +220,7 @@ public class MenuGerenteController implements Initializable{
         }
     }
 
-/* --- Estado de Menu --- */
+    /* --- Estado de Menu --- */
     // cierra el menu por defaul
     private boolean menuAbierto = false;
     
@@ -309,6 +292,7 @@ public class MenuGerenteController implements Initializable{
         }
     }
     
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
             // 1. Cargar la vista del Dashboard automáticamente al iniciar
@@ -319,6 +303,7 @@ public class MenuGerenteController implements Initializable{
             lblDashboard.getStyleClass().add("Menu-activo");
             labelSeleccionado = lblDashboard;
         }
+        
         // Configuración inicial: Invisible y no ocupa espacio
         apMenu.setVisible(false);
         apMenu.setManaged(false);

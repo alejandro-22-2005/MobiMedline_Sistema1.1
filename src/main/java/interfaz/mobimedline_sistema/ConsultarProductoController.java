@@ -14,7 +14,7 @@ public class ConsultarProductoController implements Initializable {
 
     // --- Botones y Campos ---
     @FXML private Button BtnGuardar, btnBuscar, btnEliminar, btnLimpiar, btnModificar;
-    @FXML private TextField txtBuscar, txtNombre, txtSku;
+    @FXML private TextField txtBuscar, txtNombre;
 
     // --- Tabla de Productos (Izquierda) ---
     @FXML private TableView<Producto> tvProductos;
@@ -43,7 +43,6 @@ public class ConsultarProductoController implements Initializable {
         // Listener de selección
         tvProductos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                txtSku.setText(newSelection.getSku());
                 txtNombre.setText(newSelection.getDescripcion());
 
                 // Forzar el refresco de la tabla de insumos
@@ -82,7 +81,6 @@ public class ConsultarProductoController implements Initializable {
     @FXML
     void limpiar(ActionEvent event) {
         txtBuscar.clear();
-        txtSku.clear();
         txtNombre.clear();
         tvInsumos.getItems().clear();
         refrescarLista();
@@ -104,10 +102,55 @@ public class ConsultarProductoController implements Initializable {
         tvProductos.setItems(FXCollections.observableArrayList(CatalogoProductosBase.getProductosBase()));
     }
 
+    @FXML
+    void modificar(ActionEvent event) {
+        Producto seleccionado = tvProductos.getSelectionModel().getSelectedItem();
+        if (seleccionado == null) {
+            mostrarAlerta("Por favor, selecciona un producto de la tabla para modificar.");
+            return;
+        }
+
+        // Habilitamos el campo para que el usuario pueda escribir
+        txtNombre.setEditable(true);
+        txtNombre.requestFocus();
+
+        // Opcional: Podrías cambiar el color del campo para indicar edición
+        txtNombre.setStyle("-fx-border-color: #3498db; -fx-background-color: white;");
+    }
+    
+    @FXML
+    void guardar(ActionEvent event) {
+        Producto seleccionado = tvProductos.getSelectionModel().getSelectedItem();
+        String nuevoNombre = txtNombre.getText().trim();
+
+        if (seleccionado == null) {
+            mostrarAlerta("No hay ningún producto seleccionado para guardar cambios.");
+            return;
+        }
+
+        if (nuevoNombre.isEmpty()) {
+            mostrarAlerta("El nombre del producto no puede estar vacío.");
+            return;
+        }
+
+        // 1. Actualizamos el atributo en el objeto real
+        seleccionado.setDescripcion(nuevoNombre);
+
+        // 2. Deshabilitamos la edición nuevamente
+        txtNombre.setEditable(false);
+        txtNombre.setStyle(null); // Restaurar estilo original
+
+        // 3. Refrescamos la tabla para que se vea el cambio inmediatamente
+        tvProductos.refresh();
+
+        mostrarAlerta("Producto actualizado correctamente.");
+    }
+    
     private void mostrarAlerta(String mensaje) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setHeaderText(null);
         alert.setContentText(mensaje);
         alert.showAndWait();
     }
+    
 }

@@ -92,7 +92,6 @@ public class AgregarProductoController {
     @FXML
     private void guardarProducto() {
         // Validar campos del producto
-        //Se modifico esta condicional para que ya no contemple a sku Autor:Ale
         if (txtNombre.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", 
                     "Por favor completa el código y nombre del producto.");
@@ -112,6 +111,9 @@ public class AgregarProductoController {
         for (Insumo insumo : listaInsumos) {
             producto.agregarInsumo(insumo);
         }
+        
+        //Con esto se manda los recibido de agregar a producto a catalogobasdeproductos y de catalogo se muestre a el procuto nuevo
+        CatalogoProductosBase.setProductosBase(producto);//Para mostrar en catalogo se agregaa al base de catalogo de productos// Autor:Alejandro
         
         // Mostrar resumen
         StringBuilder resumen = new StringBuilder();
@@ -150,12 +152,12 @@ public class AgregarProductoController {
     }
 
     private void limpiarTodo() {
-        //txtCodigo.clear();
+        
         txtNombre.clear();
         txtNombreInsumo.clear();
         txtCantidadInsumo.clear();
         listaInsumos.clear();
-        //txtCodigo.requestFocus();
+        
     }
 
     private void mostrarAlerta(Alert.AlertType tipo, String titulo, String mensaje) {

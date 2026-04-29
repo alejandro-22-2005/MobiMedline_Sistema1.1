@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Separator?>
@@ -16,60 +15,62 @@
 
 <AnchorPane fx:id="APcentro" maxHeight="1.7976931348623157E308" maxWidth="1.7976931348623157E308" stylesheets="@Estilos/Estilos_Interfaz.css" xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="interfaz.mobimedline_sistema.AgregarProductoController">
    <children>
-      <VBox spacing="15" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="15.0">
+      <VBox spacing="12" AnchorPane.bottomAnchor="15" AnchorPane.leftAnchor="15" AnchorPane.rightAnchor="15" AnchorPane.topAnchor="15">
          <children>
-            
             <VBox spacing="3">
                <children>
-                  <Label style="-fx-font-size: 18px;" styleClass="Texto-remarcado-azul-titulo" text="Agregar producto" />
+                  <Label style="-fx-font-size: 18px;" styleClass="Texto-remarcado-azul" text="Agregar producto" />
                   <Label style="-fx-text-fill: #888888; -fx-font-size: 10px;" styleClass="Texto" text="Completa los campos para registrar un nuevo producto con sus insumos." />
                </children>
             </VBox>
-            
             <Separator />
-
-            <GridPane hgap="12" vgap="8">
-               <columnConstraints>
-                  <ColumnConstraints minWidth="80.0" prefWidth="120.0" />
-                  <ColumnConstraints hgrow="ALWAYS" /> </columnConstraints>
-               <rowConstraints>
-                  <RowConstraints minHeight="30.0" />
-               </rowConstraints>
+            <VBox spacing="6">
                <children>
-                  <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="Nombre del producto:" />
-                  <TextField fx:id="txtNombre" promptText="Nombre del producto" styleClass="Campo-Texto-redondo" GridPane.columnIndex="1" />
+                  <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="Datos del producto" />
+                  <GridPane hgap="12" vgap="8">
+                     <columnConstraints>
+                        <ColumnConstraints minWidth="80.0" prefWidth="120.0" />
+                        <ColumnConstraints hgrow="ALWAYS" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints />
+                        <RowConstraints />
+                     </rowConstraints>
+                     <children>
+                        <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="SKU:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                        <TextField fx:id="txtCodigo" promptText="Ej: PROD-001" styleClass="Campo-Texto-redondo" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                        <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="Nombre del producto:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+                        <TextField fx:id="txtNombre" promptText="Nombre del producto" styleClass="Campo-Texto-redondo" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                     </children>
+                  </GridPane>
                </children>
-            </GridPane>
-
+            </VBox>
             <Separator />
-
-            <VBox spacing="8" VBox.vgrow="ALWAYS">
+            <VBox spacing="6" VBox.vgrow="ALWAYS">
                <children>
                   <Label style="-fx-font-size: 11px;" styleClass="Texto-remarcado-azul" text="Agregar insumos" />
-                  
-                  <HBox alignment="CENTER_LEFT" spacing="10">
+                  <HBox alignment="CENTER_LEFT" spacing="8">
                      <children>
                         <VBox spacing="3" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label style="-fx-font-size: 10px;" styleClass="Texto" text="Nombre del insumo:" />
-                              <TextField fx:id="txtNombreInsumo" prefHeight="29.0" prefWidth="198.0" promptText="Ej: Tela, Hilo" styleClass="Campo-Texto-redondo" />
+                              <Label style="-fx-font-size: 10px;" text="Nombre del insumo:" />
+                              <TextField fx:id="txtNombreInsumo" promptText="Ej: Tela, Hilo" styleClass="Campo-Texto-redondo" />
                            </children>
                         </VBox>
-                        <VBox prefWidth="150.0" spacing="3">
+                        <VBox spacing="3" HBox.hgrow="ALWAYS">
                            <children>
-                              <Label style="-fx-font-size: 10px;" styleClass="Texto" text="Cantidad:" />
-                              <HBox spacing="6">
+                              <Label style="-fx-font-size: 10px;" text="Cantidad:" />
+                              <HBox alignment="CENTER_LEFT" spacing="6">
                                  <children>
-                                    <TextField fx:id="txtCantidadInsumo" prefHeight="29.0" prefWidth="98.0" promptText="0" styleClass="Campo-Texto-redondo" HBox.hgrow="ALWAYS" />
-                                    <Button onAction="#agregarInsumo" prefWidth="156.0" styleClass="Boton-Azul" text="+ Agregar" />
+                                    <TextField fx:id="txtCantidadInsumo" promptText="Ej: 10" styleClass="Campo-Texto-redondo" HBox.hgrow="ALWAYS" />
+                                    <Button onAction="#agregarInsumo" styleClass="Boton-Azul" text="+ Agregar" />
                                  </children>
                               </HBox>
                            </children>
                         </VBox>
                      </children>
                   </HBox>
-
-                  <TableView fx:id="tablaInsumos" minHeight="150.0" prefHeight="200.0" VBox.vgrow="ALWAYS">
+                  <TableView fx:id="tablaInsumos" prefHeight="150.0" prefWidth="400.0" VBox.vgrow="ALWAYS">
                      <columns>
                         <TableColumn fx:id="colNombreInsumo" prefWidth="200.0" text="Nombre del insumo" />
                         <TableColumn fx:id="colCantidadInsumo" prefWidth="100.0" text="Cantidad" />
@@ -81,14 +82,10 @@
                   </TableView>
                </children>
             </VBox>
-
-            <HBox alignment="CENTER" spacing="20">
-               <padding>
-                  <Insets top="10.0" />
-               </padding>
+            <HBox alignment="CENTER" spacing="12">
                <children>
-                  <Button fx:id="btnGuardar" maxHeight="35.0" maxWidth="150.0" minHeight="35.0" minWidth="150.0" onAction="#guardarProducto" styleClass="Boton-Azul" text="Guardar producto" />
-                  <Button fx:id="btnLimpiar" maxHeight="35.0" maxWidth="150.0" minHeight="35.0" minWidth="150.0" onAction="#limpiar" styleClass="Boton-Rojo" text="Limpiar" />
+                  <Button fx:id="btnGuardar" maxHeight="30.0" maxWidth="130.0" minHeight="30.0" minWidth="130.0" onAction="#guardarProducto" prefHeight="30.0" prefWidth="130.0" styleClass="Boton-Azul" text="Guardar producto" />
+                  <Button fx:id="btnLimpiar" maxHeight="30.0" maxWidth="130.0" minHeight="30.0" minWidth="130.0" onAction="#limpiar" prefHeight="30.0" prefWidth="130.0" styleClass="Boton-Rojo" text="Limpiar" />
                </children>
             </HBox>
          </children>

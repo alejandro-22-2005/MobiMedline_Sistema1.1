@@ -113,6 +113,8 @@ public class AgregarProductoController {
             producto.agregarInsumo(insumo);
         }
         
+        CatalogoProductosBase.setProductosBase(producto);//Para mostrar en catalogo se agregaa al base 
+        
         // Mostrar resumen
         StringBuilder resumen = new StringBuilder();
         resumen.append("Producto guardado exitosamente:\n\n");

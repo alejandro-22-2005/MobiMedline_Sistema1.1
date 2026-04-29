@@ -94,13 +94,14 @@ public class ConsultaOrdenCompraController implements Initializable {
         Map<String, Integer> conteoInsumosTotal = new HashMap<>();
         
         List<ODC> copiaODC = ArchivoOdcBase.getOdcBase();
+        List<Producto> copiaProductos = CatalogoProductosBase.getProductosBase();
 
         // Verificación de seguridad si la lista de productos es nula
         if (seleccion.getProductos() != null) {
             for (Producto producto : seleccion.getProductos()) {
-                for (Insumo insumo : producto.getInsumosRequeridos()) {
+                for (Insumo insumo : producto.getInsumos()) {
                     conteoInsumosTotal.put(insumo.getNombre(), 
-                        conteoInsumosTotal.getOrDefault(insumo.getNombre(), 0) + insumo.getCantidad());
+                        conteoInsumosTotal.getOrDefault(insumo.getNombre(), 0) + insumo.getCantidadPorUnidad());
                 }
             }
         }
@@ -116,7 +117,7 @@ public class ConsultaOrdenCompraController implements Initializable {
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalles: " + seleccion.getIdODC());
-        alert.setHeaderText("Responsable: " + seleccion.getResponsable());
+        alert.setHeaderText("responsable: " + seleccion.getResponsable().getUsuario());
         alert.setContentText(detalle.toString());
         alert.showAndWait();
     }
@@ -203,23 +204,23 @@ public class ConsultaOrdenCompraController implements Initializable {
         listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
         tlvLista.setItems(listaFiltrada);
 
-        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
         tlcResponsable.setCellValueFactory(new PropertyValueFactory<>("responsable"));
-        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("emision"));
-        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
+        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
+        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
         
         /*agregado*/
         
-        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("id"));
+        tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
         tlcIdOrden.setReorderable(false);
 
         tlcResponsable.setCellValueFactory(new PropertyValueFactory<>("responsable"));
         tlcResponsable.setReorderable(false);
 
-        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("emision"));
+        tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
         tlcEmision.setReorderable(false);
 
-        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estatus"));
+        tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
         tlcEstatus.setReorderable(false);
         
 
@@ -245,7 +246,7 @@ public class ConsultaOrdenCompraController implements Initializable {
     }  
     
     // Clase Orden actualizada
-    public static class Orden {
+    /*public static class Orden {
         private String id;
         private String responsable;
         private String emision;
@@ -291,6 +292,6 @@ public class ConsultaOrdenCompraController implements Initializable {
         }
         public String getNombre() { return nombre; }
         public List<Insumo> getInsumosRequeridos() { return insumosRequeridos; }
-    }
+    }*/
     
 }

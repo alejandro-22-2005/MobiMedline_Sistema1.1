@@ -450,6 +450,9 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
     -fx-background-radius: 15; /* Coincide con el redondeado general */
 }
 
+.table-column {
+    -fx-alignment: CENTER;
+}
 
 /* Estilo para el DatePicker */
 .date-picker {
@@ -549,4 +552,28 @@ Click nbfs://nbhost/SystemFileSystem/Templates/Other/CascadeStyleSheet.css to ed
 .combo-box-base .combo-box-popup .list-view .list-cell:selected {
     -fx-background-color: #e3f2fd;
     -fx-text-fill: #0d273e; /* Tu azul corporativo oscuro */
+}
+
+/* Contenedor de la info de sesión */
+.session-info-container {
+    -fx-padding: 0 20 0 0; /* Espacio a la derecha del borde de la ventana */
+    -fx-spacing: 10;
+}
+
+/* Nombre del usuario */
+.user-name {
+    -fx-text-fill: white;
+    -fx-font-family: 'Roboto';
+    -fx-font-weight: bold;
+    -fx-font-size: 14px;
+}
+
+/* Rol o Permisos */
+.user-role {
+    -fx-text-fill: #cbd5db; /* El mismo gris azulado que usas en el menú */
+    -fx-font-family: 'Roboto';
+    -fx-font-size: 11px;
+    -fx-background-color: rgba(255, 255, 255, 0.1);
+    -fx-padding: 2 8 2 8;
+    -fx-background-radius: 5;
 }

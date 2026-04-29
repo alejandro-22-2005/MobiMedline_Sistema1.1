@@ -37,6 +37,7 @@
                         <Image url="@ElementosVisuales/Logo_Mobimedline.png" />
                      </image>
                   </ImageView>
+                  <VBox layoutX="528.0" layoutY="10.0" prefHeight="36.0" prefWidth="100.0" />
                </children>
             </AnchorPane>
          </top>

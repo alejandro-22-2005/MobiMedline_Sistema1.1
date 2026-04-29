@@ -92,7 +92,7 @@ public class AgregarProductoController {
     @FXML
     private void guardarProducto() {
         // Validar campos del producto
-        if (txtCodigo.getText().trim().isEmpty() || txtNombre.getText().trim().isEmpty()) {
+        if (txtNombre.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", 
                     "Por favor completa el código y nombre del producto.");
             return;

@@ -113,7 +113,7 @@ public class AgregarProductoController {
         }
         
         //Con esto se manda los recibido de agregar a producto a catalogobasdeproductos y de catalogo se muestre a el procuto nuevo
-        CatalogoProductosBase.setProductosBase(producto);//Para mostrar en catalogo se agregaa al base de catalogo de productos// Autor:Alejandro
+        CatalogoProductosBase.setProductosBase(producto)//Para mostrar en catalogo se agregaa al base de catalogo de productos// Autor:Alejandro
         
         // Mostrar resumen
         StringBuilder resumen = new StringBuilder();

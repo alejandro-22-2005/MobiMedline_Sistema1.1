@@ -15,6 +15,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import java.util.List;
 
 public class NuevaODCController implements Initializable {
     
@@ -128,7 +129,7 @@ public class NuevaODCController implements Initializable {
         txtFieldID.requestFocus();
     }
 
-    private void guardarODC() {
+    /*private void guardarODC() {
     if (listaProductos.isEmpty()) {
         mostrarAlerta("Lista vacía", "No hay productos en la lista.");
         return;
@@ -156,6 +157,40 @@ public class NuevaODCController implements Initializable {
     
     listaProductos.clear();
     
+}*/
+    
+ private void guardarODC() {
+    if (listaProductos.isEmpty()) {
+        mostrarAlerta("Lista vacía", "No hay productos en la lista.");
+        return;
+    }
+
+    //Obtener usuarios (para asignar responsable)
+    List<Usuarios> usuarios = AgendaUsuariosBase.getUsuariosBase();
+
+    //Crear nueva ODC
+    ODC nuevaODC = new ODC(
+        usuarios.get(0), // responsable
+        java.time.LocalDate.now().toString(),
+        "Pendiente"
+    );
+
+    //Agregar productos a la ODC
+    for (Producto producto : listaProductos) {
+        nuevaODC.actualizarOAgregarProducto(producto, producto.getCantidad());
+    }
+
+    // Guardado en la base
+    ArchivoOdcBase.agregarODC(nuevaODC);
+
+    // Confirmación
+    mostrarInformacion(
+        "ODC guardada",
+        "Se guardó la orden: " + nuevaODC.getIdODC()
+    );
+
+    // Limpiar tabla
+    listaProductos.clear();
 }
 
     private void mostrarAlerta(String titulo, String mensaje) {

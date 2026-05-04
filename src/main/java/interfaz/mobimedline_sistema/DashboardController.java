@@ -39,9 +39,9 @@ public class DashboardController implements Initializable {
         colEstado.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getEstado()));
 
         lista = FXCollections.observableArrayList(
-                new Orden("001", "2026-04-03", "Alexis", "Pendiente"),
-                new Orden("002", "2026-04-02", "Carlos", "Procesada"),
-                new Orden("003", "2026-04-01", "Ana", "Especial")
+                new Orden("0001-ODC", "2026-04-25", "DOSJ01", "Pendiente"),
+                new Orden("0002-ODC", "2026-04-25", "OIPM01", "Emitida"),
+                new Orden("0003-ODC", "2026-04-25", "RAAA01", "Pendiente")
         );
 
         tablaOrdenes.setItems(lista);

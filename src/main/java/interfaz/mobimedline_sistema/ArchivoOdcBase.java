@@ -44,4 +44,8 @@ public class ArchivoOdcBase {
     public static List<ODC> getOdcBase() {
         return odcBase;
     }
+    
+    public static void agregarODC(ODC odc) {
+    odcBase.add(odc);
+}
 }

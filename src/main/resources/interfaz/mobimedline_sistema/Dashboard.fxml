@@ -10,22 +10,22 @@
    <children>
       <HBox alignment="CENTER" spacing="20">
          <children>
-            <VBox style="-fx-background-color: #66b2ff; -fx-padding: 15; -fx-background-radius: 10;">
+            <VBox style="-fx-background-color: #0d273e; -fx-padding: 15; -fx-background-radius: 10;">
                <children>
-                  <Label style="-fx-text-fill: white;" text="Num. órdenes pendientes" />
-                  <Label fx:id="lblPendientes" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
+                  <Label style="-fx-text-fill: white;" text="ODC pendientes" />
+                  <Label fx:id="lblPendientes" alignment="CENTER" prefHeight="30.0" prefWidth="86.0" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
                </children>
             </VBox>
-            <VBox style="-fx-background-color: #66b2ff; -fx-padding: 15; -fx-background-radius: 10;">
+            <VBox style="-fx-background-color: #0d273e; -fx-padding: 15; -fx-background-radius: 10;">
                <children>
-                  <Label style="-fx-text-fill: white;" text="Num. órdenes procesadas" />
-                  <Label fx:id="lblProcesadas" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
+                  <Label style="-fx-text-fill: white;" text="ODC procesadas" />
+                  <Label fx:id="lblProcesadas" alignment="CENTER" prefHeight="30.0" prefWidth="89.0" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
                </children>
             </VBox>
-            <VBox style="-fx-background-color: #66b2ff; -fx-padding: 15; -fx-background-radius: 10;">
+            <VBox style="-fx-background-color: #0d273e; -fx-padding: 15; -fx-background-radius: 10;">
                <children>
-                  <Label style="-fx-text-fill: white;" text="Num. órdenes especiales" />
-                  <Label fx:id="lblEspeciales" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
+                  <Label style="-fx-text-fill: white;" text="ODC especiales" />
+                  <Label fx:id="lblEspeciales" alignment="CENTER" prefHeight="30.0" prefWidth="76.0" style="-fx-text-fill: white; -fx-font-size: 20px;" text="0" />
                </children>
             </VBox>
          </children>

@@ -10,6 +10,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 
+
+// se modifica esta clase 
+
 public class ConsultarProductoController implements Initializable {
 
     // --- Botones y Campos ---

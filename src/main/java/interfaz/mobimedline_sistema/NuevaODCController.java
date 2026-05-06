@@ -42,33 +42,34 @@ public class NuevaODCController implements Initializable {
 
     @FXML
     private Button btnSave;
+    private static final int MAX_PRODUCTOS = 10;
 
+    private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
    
-   @FXML
+    private boolean esEmpleado() {
+    return !IniciarSesController.usuarioActual.getPermisos();
+    }
+
+    @FXML
     void eliminarProducto(ActionEvent event) {
 
         Producto productoSeleccionado = tablevTabla.getSelectionModel().getSelectedItem();
 
         if (productoSeleccionado == null) {
-        mostrarAlerta("Sin selección", "Debes seleccionar un producto de la tabla para eliminarlo.");
-        return;
+            mostrarAlerta("Sin selección", "Debes seleccionar un producto de la tabla para eliminarlo.");
+            return;
         }
 
         Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
         confirmacion.setTitle("Confirmar eliminación");
         confirmacion.setHeaderText("Eliminar producto");
         confirmacion.setContentText("¿Deseas eliminar el producto con ID " 
-            + productoSeleccionado.getSku() + "?");
+                + productoSeleccionado.getSku() + "?");
 
         if (confirmacion.showAndWait().orElse(null) == javafx.scene.control.ButtonType.OK) {
             listaProductos.remove(productoSeleccionado);
-            }
+        }
     }
-
-    
-
-    private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
-    //private final Catalogov Catalogo = new Catalogov();
 
     private void configurarTabla() {
         tcId.setCellValueFactory(new PropertyValueFactory<>("sku"));
@@ -84,22 +85,23 @@ public class NuevaODCController implements Initializable {
     }
 
     private void agregarProducto() {
+
         String textoId = txtFieldID.getText().trim();
         String textoCantidad = txtFieldCantidad.getText().trim();
 
+        // Validar campos
         if (textoId.isEmpty() || textoCantidad.isEmpty()) {
             mostrarAlerta("Campos vacíos", "Debes ingresar el ID y la cantidad.");
             return;
         }
 
-        String id; //cambiar etiqueta
         int cantidad;
 
-        try {//excepciones
-            id = textoId;
+        //Validar número
+        try {
             cantidad = Integer.parseInt(textoCantidad);
         } catch (NumberFormatException e) {
-            mostrarAlerta("Dato inválido", "El ID y la cantidad deben ser números enteros.");
+            mostrarAlerta("Dato inválido", "La cantidad debe ser un número entero.");
             return;
         }
 
@@ -108,13 +110,38 @@ public class NuevaODCController implements Initializable {
             return;
         }
 
+        //validar límite
+        for (Producto p : listaProductos) {
+            if (p.getSku().equals(textoId)) {
+
+                if (esEmpleado() && p.getCantidad()+ cantidad > MAX_PRODUCTOS) {
+                    mostrarAlerta("Límite alcanzado",
+                            "No puedes tener más de " + MAX_PRODUCTOS + " unidades de este producto.");
+                    return;
+                }
+
+                p.setCantidad(p.getCantidad() + cantidad);
+                tablevTabla.refresh();
+                return;
+            }
+        }
+
+        //Buscar producto
         Producto productoCopia = CatalogoProductosBase.buscarPorSku(textoId);
 
         if (productoCopia == null) {
-            mostrarAlerta("Producto no encontrado", "No existe un producto con el ID: " + id);
+            mostrarAlerta("Producto no encontrado",
+                    "No existe un producto con el ID: " + textoId);
             return;
         }
 
+        //Validar empleado
+        if(esEmpleado() && cantidad >MAX_PRODUCTOS){
+            mostrarAlerta("Limite alcanzado",
+                    "No puedes agregar más de "+ MAX_PRODUCTOS + " unidades.");
+            return;
+        }
+        
         Producto productoODC = new Producto(
                 productoCopia.getSku(),
                 productoCopia.getDescripcion(),
@@ -124,11 +151,11 @@ public class NuevaODCController implements Initializable {
 
         listaProductos.add(productoODC);
 
+        //Limpiar
         txtFieldID.clear();
         txtFieldCantidad.clear();
         txtFieldID.requestFocus();
     }
-
     /*private void guardarODC() {
     if (listaProductos.isEmpty()) {
         mostrarAlerta("Lista vacía", "No hay productos en la lista.");
@@ -165,12 +192,9 @@ public class NuevaODCController implements Initializable {
         return;
     }
 
-    //Obtener usuarios (para asignar responsable)
-    List<Usuarios> usuarios = AgendaUsuariosBase.getUsuariosBase();
-
     //Crear nueva ODC
     ODC nuevaODC = new ODC(
-        usuarios.get(0), // responsable
+            IniciarSesController.usuarioActual, // responsable
         java.time.LocalDate.now().toString(),
         "Pendiente"
     );

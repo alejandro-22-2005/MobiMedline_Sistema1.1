@@ -10,6 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 
 public class IniciarSesController {
+    public static Usuarios usuarioActual; //saber quién inició sesión
 
     @FXML
     private TextField tfnombreUs;
@@ -33,6 +34,7 @@ private void handleLogin() {
     for (Usuarios u : listaUsuarios) {
         if (u.getUsuario().equals(user) && u.getContraseña().equals(pass)) {
             loginExitoso = true;
+            usuarioActual = u; //usuario que inició sesión
             
             try {
                 if (u.getPermisos()) { // Es true (Gerente)

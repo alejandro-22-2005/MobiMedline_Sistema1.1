@@ -42,56 +42,90 @@ public class NuevaODCController implements Initializable {
 
     @FXML
     private Button btnSave;
+
     private static final int MAX_PRODUCTOS = 10;
 
-    private final ObservableList<Producto> listaProductos = FXCollections.observableArrayList();
-   
+    private final ObservableList<Producto> listaProductos =
+            FXCollections.observableArrayList();
+
     private boolean esEmpleado() {
-    return !IniciarSesController.usuarioActual.getPermisos();
+
+        return !IniciarSesController.usuarioActual.getPermisos();
     }
 
     @FXML
     void eliminarProducto(ActionEvent event) {
 
-        Producto productoSeleccionado = tablevTabla.getSelectionModel().getSelectedItem();
+        Producto productoSeleccionado =
+                tablevTabla.getSelectionModel().getSelectedItem();
 
         if (productoSeleccionado == null) {
-            mostrarAlerta("Sin selección", "Debes seleccionar un producto de la tabla para eliminarlo.");
+
+            mostrarAlerta(
+                    "Sin selección",
+                    "Debes seleccionar un producto de la tabla para eliminarlo."
+            );
+
             return;
         }
 
-        Alert confirmacion = new Alert(Alert.AlertType.CONFIRMATION);
-        confirmacion.setTitle("Confirmar eliminación");
-        confirmacion.setHeaderText("Eliminar producto");
-        confirmacion.setContentText("¿Deseas eliminar el producto con ID " 
-                + productoSeleccionado.getSku() + "?");
+        Alert confirmacion =
+                new Alert(Alert.AlertType.CONFIRMATION);
 
-        if (confirmacion.showAndWait().orElse(null) == javafx.scene.control.ButtonType.OK) {
+        confirmacion.setTitle("Confirmar eliminación");
+
+        confirmacion.setHeaderText("Eliminar producto");
+
+        confirmacion.setContentText(
+                "¿Deseas eliminar el producto con ID "
+                + productoSeleccionado.getSku()
+                + "?"
+        );
+
+        if (confirmacion.showAndWait().orElse(null)
+                == javafx.scene.control.ButtonType.OK) {
+
             listaProductos.remove(productoSeleccionado);
         }
     }
 
     private void configurarTabla() {
-        tcId.setCellValueFactory(new PropertyValueFactory<>("sku"));
-        tcDescripcion.setCellValueFactory(new PropertyValueFactory<>("descripcion"));
-        tcCantidad.setCellValueFactory(new PropertyValueFactory<>("cantidad"));
+
+        tcId.setCellValueFactory(
+                new PropertyValueFactory<>("sku"));
+
+        tcDescripcion.setCellValueFactory(
+                new PropertyValueFactory<>("descripcion"));
+
+        tcCantidad.setCellValueFactory(
+                new PropertyValueFactory<>("cantidad"));
 
         tablevTabla.setItems(listaProductos);
     }
 
     private void configurarEventos() {
+
         btnMas1.setOnAction(e -> agregarProducto());
+
         btnSave.setOnAction(e -> guardarODC());
     }
 
     private void agregarProducto() {
 
-        String textoId = txtFieldID.getText().trim();
-        String textoCantidad = txtFieldCantidad.getText().trim();
+        String textoId =
+                txtFieldID.getText().trim();
+
+        String textoCantidad =
+                txtFieldCantidad.getText().trim();
 
         // Validar campos
         if (textoId.isEmpty() || textoCantidad.isEmpty()) {
-            mostrarAlerta("Campos vacíos", "Debes ingresar el ID y la cantidad.");
+
+            mostrarAlerta(
+                    "Campos vacíos",
+                    "Debes ingresar el ID y la cantidad."
+            );
+
             return;
         }
 
@@ -99,53 +133,93 @@ public class NuevaODCController implements Initializable {
 
         //Validar número
         try {
+
             cantidad = Integer.parseInt(textoCantidad);
+
         } catch (NumberFormatException e) {
-            mostrarAlerta("Dato inválido", "La cantidad debe ser un número entero.");
+
+            mostrarAlerta(
+                    "Dato inválido",
+                    "La cantidad debe ser un número entero."
+            );
+
             return;
         }
 
         if (cantidad <= 0) {
-            mostrarAlerta("Cantidad inválida", "La cantidad debe ser mayor que cero.");
+
+            mostrarAlerta(
+                    "Cantidad inválida",
+                    "La cantidad debe ser mayor que cero."
+            );
+
             return;
         }
 
         //validar límite
         for (Producto p : listaProductos) {
+
             if (p.getSku().equals(textoId)) {
 
-                if (esEmpleado() && p.getCantidad()+ cantidad > MAX_PRODUCTOS) {
-                    mostrarAlerta("Límite alcanzado",
-                            "No puedes tener más de " + MAX_PRODUCTOS + " unidades de este producto.");
+                if (esEmpleado()
+                        && p.getCantidad() + cantidad > MAX_PRODUCTOS) {
+
+                    mostrarAlerta(
+                            "Límite alcanzado",
+                            "No puedes tener más de "
+                            + MAX_PRODUCTOS
+                            + " unidades de este producto."
+                    );
+
                     return;
                 }
 
-                p.setCantidad(p.getCantidad() + cantidad);
+                p.setCantidad(
+                        p.getCantidad() + cantidad
+                );
+
                 tablevTabla.refresh();
+
                 return;
             }
         }
 
         //Buscar producto
-        Producto productoCopia = CatalogoProductosBase.buscarPorSku(textoId);
+        Producto productoCopia =
+                CatalogoProductosBase.buscarPorSku(textoId);
 
         if (productoCopia == null) {
-            mostrarAlerta("Producto no encontrado",
-                    "No existe un producto con el ID: " + textoId);
+
+            mostrarAlerta(
+                    "Producto no encontrado",
+                    "No existe un producto con el ID: "
+                    + textoId
+            );
+
             return;
         }
 
         //Validar empleado
-        if(esEmpleado() && cantidad >MAX_PRODUCTOS){
-            mostrarAlerta("Limite alcanzado",
-                    "No puedes agregar más de "+ MAX_PRODUCTOS + " unidades.");
+        if (esEmpleado() && cantidad > MAX_PRODUCTOS) {
+
+            mostrarAlerta(
+                    "Limite alcanzado",
+                    "No puedes agregar más de "
+                    + MAX_PRODUCTOS
+                    + " unidades."
+            );
+
             return;
         }
         
         Producto productoODC = new Producto(
+
                 productoCopia.getSku(),
+
                 productoCopia.getDescripcion(),
+
                 cantidad,
+
                 new ArrayList<>(productoCopia.getInsumos())
         );
 
@@ -153,88 +227,110 @@ public class NuevaODCController implements Initializable {
 
         //Limpiar
         txtFieldID.clear();
+
         txtFieldCantidad.clear();
+
         txtFieldID.requestFocus();
     }
-    /*private void guardarODC() {
-    if (listaProductos.isEmpty()) {
-        mostrarAlerta("Lista vacía", "No hay productos en la lista.");
-        return;
+
+    private void guardarODC() {
+
+        if (listaProductos.isEmpty()) {
+
+            mostrarAlerta(
+                    "Lista vacía",
+                    "No hay productos en la lista."
+            );
+
+            return;
+        }
+
+        //Crear nueva ODC
+        ODC nuevaODC = new ODC(
+
+                IniciarSesController.usuarioActual,
+
+                java.time.LocalDate.now().toString(),
+
+                "Pendiente"
+        );
+
+        //Agregar productos a la ODC
+        for (Producto producto : listaProductos) {
+
+            nuevaODC.actualizarOAgregarProducto(
+                    producto,
+                    producto.getCantidad()
+            );
+        }
+
+        // Guardado en la base
+        ArchivoOdcBase.agregarODC(nuevaODC);
+
+        // ==============================
+        // ENVIAR AL DASHBOARD
+        // ==============================
+
+        DashboardController.lista.add(
+
+                new DashboardController.Orden(
+
+                        nuevaODC.getIdODC(),
+
+                        nuevaODC.getFechaODC(),
+
+                        nuevaODC.getResponsable().getUsuario(),
+
+                        nuevaODC.getEstado()
+                )
+        );
+
+        // Confirmación
+        mostrarInformacion(
+
+                "ODC guardada",
+
+                "Se guardó la orden: "
+                + nuevaODC.getIdODC()
+        );
+
+        // Limpiar tabla
+        listaProductos.clear();
     }
-
-    StringBuilder contenido = new StringBuilder();
-    contenido.append("PRODUCTOS REGISTRADOS EN LA LISTA\n\n");
-
-    for (Producto producto : listaProductos) {
-        contenido.append("SKU: ").append(producto.getSku()).append("\n");
-        contenido.append("Descripción: ").append(producto.getDescripcion()).append("\n");
-        contenido.append("Cantidad: ").append(producto.getCantidad()).append("\n");
-        contenido.append("-----------------------------\n");
-    }
-
-    TextArea areaTexto = new TextArea(contenido.toString());
-    areaTexto.setEditable(false);
-    areaTexto.setWrapText(true);
-
-    Alert alert = new Alert(Alert.AlertType.INFORMATION);
-    alert.setTitle("Lista guardada");
-    alert.setHeaderText("Productos agregados correctamente");
-    alert.getDialogPane().setContent(areaTexto);
-    alert.showAndWait();
-    
-    listaProductos.clear();
-    
-}*/
-    
- private void guardarODC() {
-    if (listaProductos.isEmpty()) {
-        mostrarAlerta("Lista vacía", "No hay productos en la lista.");
-        return;
-    }
-
-    //Crear nueva ODC
-    ODC nuevaODC = new ODC(
-            IniciarSesController.usuarioActual, // responsable
-        java.time.LocalDate.now().toString(),
-        "Pendiente"
-    );
-
-    //Agregar productos a la ODC
-    for (Producto producto : listaProductos) {
-        nuevaODC.actualizarOAgregarProducto(producto, producto.getCantidad());
-    }
-
-    // Guardado en la base
-    ArchivoOdcBase.agregarODC(nuevaODC);
-
-    // Confirmación
-    mostrarInformacion(
-        "ODC guardada",
-        "Se guardó la orden: " + nuevaODC.getIdODC()
-    );
-
-    // Limpiar tabla
-    listaProductos.clear();
-}
 
     private void mostrarAlerta(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.WARNING);
+
+        Alert alert =
+                new Alert(Alert.AlertType.WARNING);
+
         alert.setTitle("Aviso");
+
         alert.setHeaderText(titulo);
+
         alert.setContentText(mensaje);
+
         alert.showAndWait();
     }
 
     private void mostrarInformacion(String titulo, String mensaje) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+
+        Alert alert =
+                new Alert(Alert.AlertType.INFORMATION);
+
         alert.setTitle("Información");
+
         alert.setHeaderText(titulo);
+
         alert.setContentText(mensaje);
+
         alert.showAndWait();
     }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         configurarTabla();
+
         configurarEventos();
     }
 }

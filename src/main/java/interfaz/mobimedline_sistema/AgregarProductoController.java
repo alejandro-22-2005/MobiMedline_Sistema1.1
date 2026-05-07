@@ -63,10 +63,26 @@ public class AgregarProductoController {//clase para agregar porductos
 
     @FXML
     private void agregarInsumo() {
+        
+        String nombreNuevo = txtNombreInsumo.getText().trim();
+        
         // Validar campos de insumo
         if (txtNombreInsumo.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campo vacío", "Por favor ingresa el nombre del insumo.");
             return;
+        }
+        
+        //String nombreFormateado = capitalizar(nombreNuevo);
+        
+        //Este se hizo para que cuando se captures un insumo pase por una condcional en el cual 
+        //se evaluara si es existente o es nuevo
+        boolean yaExiste = listaInsumos.stream()
+            .anyMatch(i -> i.getNombre().equalsIgnoreCase(nombreNuevo));
+    
+        if (yaExiste) {
+        mostrarAlerta(Alert.AlertType.WARNING, "Insumo duplicado", 
+                "Este insumo ya ha sido agregado a la lista actual.");
+        return;
         }
         
         int cantidad;
@@ -91,6 +107,9 @@ public class AgregarProductoController {//clase para agregar porductos
 
     @FXML
     private void guardarProducto() {
+        
+        String nombreProd = txtNombre.getText().trim();
+        
         // Validar campos del producto
         if (txtNombre.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", 
@@ -102,6 +121,17 @@ public class AgregarProductoController {//clase para agregar porductos
             mostrarAlerta(Alert.AlertType.WARNING, "Sin insumos", 
                     "Debes agregar al menos un insumo al producto.");
             return;
+        }
+        
+        //Este se hizo para que cuando se captures un producto pase por una condcional en el cual 
+        //se evaluara si es existente o es nuevo
+        boolean productoRepetido = CatalogoProductosBase.getProductosBase().stream()
+            .anyMatch(p -> p.getDescripcion().equalsIgnoreCase(nombreProd));
+
+        if (productoRepetido) {
+        mostrarAlerta(Alert.AlertType.ERROR, "Producto existente", 
+                "Ya existe un producto registrado con el nombre: " + nombreProd);
+        return;
         }
         
         // Crear el producto

@@ -17,7 +17,7 @@ public class CatalogoProductosBase {
     // Bloque estático para inicializar los productos base una sola vez
     static {
         // --- Producto Base: Vitrina Futuro ---
-        Producto VitrinaFuturo = new Producto("Vitrina Modelo Futuro");
+        Producto VitrinaFuturo = new Producto("Vitrina modelo futuro");
         VitrinaFuturo.agregarInsumo(new Insumo("Vidrio de 33x60 cm", 1));
         VitrinaFuturo.agregarInsumo(new Insumo("Cerradura", 1));
         VitrinaFuturo.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 6));
@@ -26,7 +26,7 @@ public class CatalogoProductosBase {
         
 
         // --- Producto Base: Mesa de Exploracion Premium ---
-        Producto MesaExpPremium = new Producto("Mesa de Exploración Premium");
+        Producto MesaExpPremium = new Producto("Mesa de exploración premium");
         MesaExpPremium.agregarInsumo(new Insumo("Tapiz para Mesa de exploración", 1));
         MesaExpPremium.agregarInsumo(new Insumo("Tope de plástico", 4));
         MesaExpPremium.agregarInsumo(new Insumo("Agarradera de plástico", 2));
@@ -47,7 +47,7 @@ public class CatalogoProductosBase {
         
         
          // --- Producto Base: Silla Toma de Muestra ---
-        Producto SillaTomadeMuestra = new Producto("Silla Toma de Muestra");
+        Producto SillaTomadeMuestra = new Producto("Silla toma de muestra");
         SillaTomadeMuestra.agregarInsumo(new Insumo("Tapiz para Silla toma de muestra", 1));
         SillaTomadeMuestra.agregarInsumo(new Insumo("Cubierta de acero inoxidable de 30x30 cm", 1));
         SillaTomadeMuestra.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 12));
@@ -57,7 +57,7 @@ public class CatalogoProductosBase {
         
         
          // --- Producto Base: Gabinete Hamilton ---
-        Producto GabineteHamilton = new Producto("Gabinete Hamilton");
+        Producto GabineteHamilton = new Producto("Gabinete hamilton");
         GabineteHamilton.agregarInsumo(new Insumo("Vidrio de 30x45 cm", 1));
         GabineteHamilton.agregarInsumo(new Insumo("Cubierta de acero inoxidable de 30x65 cm", 1));
         GabineteHamilton.agregarInsumo(new Insumo("Pija punta de broca de 1/4 de pulgada", 6));

@@ -55,6 +55,9 @@
          </BorderPane.margin>
          <children>
             <Button fx:id="btnEliminar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Eliminar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Rojo" text="Eliminar" />
+           
+            <Button fx:id="btnVerPassword" maxHeight="30.0" maxWidth="100.0" minHeight="30.0" minWidth="100.0" mnemonicParsing="false" onAction="#verPasswordSeleccionado" prefHeight="30.0" prefWidth="100.0" styleClass="Boton-Azul" text="Ver Contraseña" />
+
             <Button fx:id="btnEditar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Editar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Azul" text="Editar" />
             <Button fx:id="btnGuardar" maxHeight="30.0" maxWidth="70.0" minHeight="30.0" minWidth="70.0" mnemonicParsing="false" onAction="#Guardar" prefHeight="30.0" prefWidth="70.0" styleClass="Boton-Azul" text="Guardar" />
          </children>

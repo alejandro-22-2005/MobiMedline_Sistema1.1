@@ -15,11 +15,13 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
 import javafx.scene.layout.VBox;
+import javafx.util.converter.DefaultStringConverter;
 
 public class ConsultarEmpleadoController implements Initializable {
     
@@ -54,6 +56,9 @@ public class ConsultarEmpleadoController implements Initializable {
     //LISTA DE EMPLEADOS QUE SE MUESTRAN EN LA TABLE: Usamos ObservableList para que se actualice con las acciones que hacemos
     
     private ObservableList<Usuarios> listaEmpleados = FXCollections.observableArrayList();
+    
+    // Almacena qué usuario tiene permiso de mostrar contraseña
+    private Usuarios usuarioRevelado = null; 
 
    //BOTONES DE ACCIÓN
     
@@ -164,6 +169,40 @@ public class ConsultarEmpleadoController implements Initializable {
 
     }
     
+    @FXML
+    void verPasswordSeleccionado(ActionEvent event) {
+    //Obtener quién está seleccionado en la tabla
+    Usuarios seleccionado = tblEmpleados.getSelectionModel().getSelectedItem();
+
+    if (seleccionado == null) {
+        Alert alerta = new Alert(Alert.AlertType.WARNING);
+        alerta.setTitle("Aviso");
+        alerta.setHeaderText(null);
+        alerta.setContentText("Por favor, selecciona un empleado de la tabla.");
+        alerta.showAndWait();
+        return;
+    }
+
+    // Si el usuario ya está revelado y pulsas de nuevo, lo ocultamos
+    if (usuarioRevelado == seleccionado) {
+        usuarioRevelado = null;
+        tblEmpleados.refresh();
+        return;
+    }
+
+    //Pedir autorización al gerente
+    if (validarGerente()) {
+        usuarioRevelado = seleccionado; 
+        tblEmpleados.refresh(); 
+    } else {
+        Alert incorrecta = new Alert(Alert.AlertType.ERROR);
+        incorrecta.setTitle("ERROR");
+        incorrecta.setHeaderText(null);
+        incorrecta.setContentText("Contraseña del gerente incorrecta.");
+        incorrecta.showAndWait();
+    }
+}
+    
     //METODO PARA VALIDAR EL USUARIO DEL GERENTE PARA MODIFICAR LAS CREDENCIALES DE LOS EMPLEADOS
     
     private boolean validarGerente(){
@@ -206,7 +245,7 @@ public class ConsultarEmpleadoController implements Initializable {
     //INICIALIZADOR
     
     @Override
-public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin poder modificarse
+    public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin poder modificarse
         tblEmpleados.setEditable(false);
         btnEditar.setDisable(false);
         btnEliminar.setDisable(false);
@@ -219,7 +258,34 @@ public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin
         //Columnas editables
         colNombre.setCellFactory(TextFieldTableCell.forTableColumn());
         colUsuario.setCellFactory(TextFieldTableCell.forTableColumn());
-        colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
+        //colPassword.setCellFactory(TextFieldTableCell.forTableColumn());
+        
+        colPassword.setCellFactory(column -> new TextFieldTableCell<Usuarios, String>(new DefaultStringConverter()) {
+    @Override
+    public void updateItem(String item, boolean empty) {
+        super.updateItem(item, empty);
+        
+        if (empty || item == null) {
+            setText(null);
+            setGraphic(null);
+        } else {
+            // Si la celda está siendo editada, no forzamos los asteriscos
+            if (isEditing()) {
+                setText(item); 
+            } else {
+                // Obtenemos el usuario de la fila actual
+                Usuarios usuarioDeFila = getTableRow() != null ? getTableRow().getItem() : null;
+                
+                // Si el gerente autorizó este usuario específico, mostramos la clave[cite: 3, 4]
+                if (usuarioDeFila != null && usuarioDeFila == usuarioRevelado) {
+                    setText(item); 
+                } else {
+                    setText("********"); // De lo contrario, ocultamos
+                }
+            }
+        }
+    }
+    });
         
         //Guardar la info ingresada de la modificación
         colNombre.setOnEditCommit(event -> {
@@ -248,7 +314,7 @@ public void initialize(URL url, ResourceBundle rb) {    //Tabla inicializada sin
         listaEmpleados.addAll(AgendaUsuariosBase.getUsuariosBase());//Autor:Ale
         
         tblEmpleados.setItems(listaEmpleados);
-
+        
         // Datos de prueba
         //listaEmpleados.add(new Empleadosj("Juan", "juan123", "1234"));
         //listaEmpleados.add(new Empleadosj("Ana", "ana456", "abcd"));

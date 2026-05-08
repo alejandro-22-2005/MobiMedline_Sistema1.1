@@ -219,7 +219,7 @@ public class AgregarProductoController {//clase para agregar porductos
     if (texto == null || texto.isEmpty()) return;
 
     if (!Character.isUpperCase(texto.charAt(0))) {
-        throw new IllegalArgumentException("La primera letra tiene que ser en MAYÚSCULA.");
+        throw new IllegalArgumentException("Solo la primer letra tiene deber ser MAYÚSCULA.");
         }
     }
 }

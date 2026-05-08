@@ -14,6 +14,11 @@ import java.util.List;
 public class AgendaUsuariosBase {
     private static List<Usuarios> usuariosBase = new ArrayList<>();
     
+    //Se agrego para hacer un puente que cuando se modifique algo se guarde directamente en esta clase de base 
+    public static void setUsuariosBase(List<Usuarios> nuevaLista) {
+    usuariosBase = nuevaLista;
+    }
+    
     // Bloque estático para inicializar los Usuarios base una sola vez
     static {
         // --- Usuario Base: Gerente ---

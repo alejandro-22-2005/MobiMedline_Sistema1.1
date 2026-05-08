@@ -1,6 +1,8 @@
 package interfaz.mobimedline_sistema;
 
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.application.Platform;
@@ -152,6 +154,16 @@ public class ConsultarEmpleadoController implements Initializable {
 
     @FXML
     void Guardar(ActionEvent event) {
+        
+        //Obtener la lista de usuarios que están actualmente en la tabla (ya editados)
+        List<Usuarios> listaEditada = new ArrayList<>(tblEmpleados.getItems());
+        
+        //eSTE ACTUALIZARA LA LISTA UNA VEZ QUE SE HAGA LAS MODIFICACIONES PERTINENTESD
+        AgendaUsuariosBase.setUsuariosBase(listaEditada);
+        
+        //Resetea permisos de visualización por seguridad
+        usuarioRevelado = null;
+        
         tblEmpleados.refresh();
         tblEmpleados.setEditable(false);
         

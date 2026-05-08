@@ -72,6 +72,14 @@ public class AgregarProductoController {//clase para agregar porductos
             return;
         }
         
+        // Nueva validación de primera letra en mayúscula
+        try {
+        validarPrimeraMayuscula(nombreNuevo);
+        } catch (IllegalArgumentException e) {
+        mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
+        return;
+        }
+        
         //String nombreFormateado = capitalizar(nombreNuevo);
         
         //Este se hizo para que cuando se captures un insumo pase por una condcional en el cual 
@@ -121,6 +129,14 @@ public class AgregarProductoController {//clase para agregar porductos
             mostrarAlerta(Alert.AlertType.WARNING, "Sin insumos", 
                     "Debes agregar al menos un insumo al producto.");
             return;
+        }
+        
+        //Se modifico esto 
+        try {
+        validarPrimeraMayuscula(nombreProd);
+        } catch (IllegalArgumentException e) {
+        mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
+        return;
         }
         
         //Este se hizo para que cuando se captures un producto pase por una condcional en el cual 
@@ -196,5 +212,14 @@ public class AgregarProductoController {//clase para agregar porductos
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();
+    }
+    
+    //Este metodo sirve para que cheque o valide el nombre tiene el formato para la primera mayuscula
+    private void validarPrimeraMayuscula(String texto) throws IllegalArgumentException {
+    if (texto == null || texto.isEmpty()) return;
+
+    if (!Character.isUpperCase(texto.charAt(0))) {
+        throw new IllegalArgumentException("La primera letra tiene que ser en MAYÚSCULA.");
+        }
     }
 }

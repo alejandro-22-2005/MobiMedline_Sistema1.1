@@ -22,7 +22,7 @@ public class ODC {
     private boolean tipoEspecial;
     private Usuarios responsable;
     private final String fechaODC;
-    private final String estado;
+    private String estado;
     
     
     // --- Constructor ---
@@ -191,6 +191,10 @@ public class ODC {
     public String getEstado() {
         return estado;
     }
+    
+    public void setEstado(String estado) {
+    this.estado = estado;
+    }
 
     public String getFechaODC() {
         return fechaODC;
@@ -204,7 +208,4 @@ public class ODC {
     public void setResponsable(Usuarios responsable) {
         this.responsable = responsable;
     }
-    
-    
-    
 }

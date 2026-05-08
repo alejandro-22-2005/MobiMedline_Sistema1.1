@@ -6,13 +6,15 @@ package interfaz.mobimedline_sistema;
 
 import java.util.ArrayList;
 import java.util.List;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 /**
  *Clase dedicada a guardar las ODC cargados en el codigo y las que se generen
  * @author Mike
  */
 public class ArchivoOdcBase {
-    private static List<ODC> odcBase = new ArrayList<>();
+    private static ObservableList<ODC> odcBase = FXCollections.observableArrayList();
     
     // Bloque estático para inicializar las ODC base una sola vez
     
@@ -41,11 +43,23 @@ public class ArchivoOdcBase {
         odcBase.add(odc3);
     }
 
-    public static List<ODC> getOdcBase() {
-        return odcBase;
+    public static ObservableList<ODC> getOdcBase() {
+    return odcBase;
+    }
+    
+    public static void actualizarODC(ODC odcActualizada) {
+    for (int i = 0; i < odcBase.size(); i++) {
+        if (odcBase.get(i).getIdODC().equals(odcActualizada.getIdODC())) {
+            odcBase.set(i, odcActualizada);
+            return;
+        }
+      }
     }
     
     public static void agregarODC(ODC odc) {
     odcBase.add(odc);
+    }
 }
-}
+
+    
+

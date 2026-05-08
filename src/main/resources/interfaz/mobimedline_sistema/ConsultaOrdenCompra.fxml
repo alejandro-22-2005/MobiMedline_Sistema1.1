@@ -49,7 +49,7 @@
                <columns>
                   <TableColumn fx:id="tlcIdOrden" prefWidth="66.0" text="ID ODC" />
                   <TableColumn fx:id="tlcResponsable" prefWidth="111.0" text="Responsable" />
-                  <TableColumn fx:id="tlcEmision" prefWidth="109.0" text="Fecha Emision" />
+                  <TableColumn fx:id="tlcEmision" prefWidth="109.0" text="Fecha emisión" />
                   <TableColumn fx:id="tlcEstatus" prefWidth="81.0" text="Estatus" />
                </columns>
                <columnResizePolicy>

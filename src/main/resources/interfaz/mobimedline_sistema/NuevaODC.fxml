@@ -3,6 +3,7 @@
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
@@ -19,37 +20,63 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </Label>
-            <HBox prefHeight="45.0" prefWidth="491.0" spacing="10.0">
+            <HBox prefHeight="45.0" prefWidth="491.0" spacing="5.0">
                <children>
-                  <Label fx:id="lblID" minWidth="19.0" prefHeight="22.0" prefWidth="24.0" styleClass="Texto-remarcado-azul" text="SKU">
+                  <HBox prefHeight="46.0" prefWidth="107.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label fx:id="lblID" minWidth="19.0" prefHeight="22.0" prefWidth="24.0" styleClass="Texto" text="SKU" />
+                              <TextField fx:id="txtFieldID" prefHeight="29.0" prefWidth="81.0" promptText="Ej: 00001" styleClass="Campo-Texto-redondo" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="46.0" prefWidth="107.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label fx:id="lblProducto" text="Producto" />
+                              <TextField fx:id="txtFieldProducto" minHeight="0.0" minWidth="40.0" prefWidth="80.0" promptText="Ej:  Gabinete Futuro" styleClass="Campo-Texto-redondo">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <HBox prefHeight="46.0" prefWidth="107.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0">
+                           <children>
+                              <Label fx:id="lblCantidad" styleClass="Texto" text="Cantidad" />
+                              <TextField fx:id="txtFieldCantidad" prefWidth="80.0" promptText="Ej: 1, 2,3,..." styleClass="Campo-Texto-redondo">
+                                 <VBox.margin>
+                                    <Insets />
+                                 </VBox.margin>
+                              </TextField>
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+                  <Button fx:id="btnMas1" alignment="CENTER" mnemonicParsing="false" prefHeight="46.0" prefWidth="107.0" styleClass="Boton-Azul" text="Añadir">
                      <HBox.margin>
-                        <Insets />
-                     </HBox.margin>
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="txtFieldID" prefHeight="27.0" prefWidth="55.0" styleClass="date-picker" />
-                  <Label fx:id="lblCantidad" styleClass="Texto-remarcado-azul" text="Cantidad">
-                     <padding>
-                        <Insets top="5.0" />
-                     </padding>
-                  </Label>
-                  <TextField fx:id="txtFieldCantidad" minHeight="0.0" minWidth="40.0" prefWidth="80.0" styleClass="date-picker" />
-                  <Button fx:id="btnMas1" alignment="CENTER" mnemonicParsing="false" prefHeight="47.0" prefWidth="298.0" styleClass="Boton-Azul" text="Añadir">
-                     <HBox.margin>
-                        <Insets left="10.0" right="20.0" />
+                        <Insets right="10.0" top="20.0" />
                      </HBox.margin>
                   </Button>
                </children>
                <padding>
-                  <Insets bottom="15.0" left="15.0" top="15.0" />
+                  <Insets bottom="15.0" top="15.0" />
                </padding>
             </HBox>
             <Label fx:id="lblLista" styleClass="Texto-remarcado-azul" text="Lista de productos">
                <padding>
                   <Insets bottom="5.0" left="140.0" />
                </padding>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
             </Label>
          </children>
          <BorderPane.margin>
@@ -58,9 +85,9 @@
       </VBox>
    </top>
    <center>
-      <TableView fx:id="tablevTabla" prefHeight="393.0" prefWidth="587.0" styleClass="list-cell" BorderPane.alignment="CENTER">
+      <TableView fx:id="tablevTabla" prefHeight="169.0" prefWidth="423.0" styleClass="list-cell" BorderPane.alignment="CENTER">
          <columns>
-            <TableColumn fx:id="tcId" prefWidth="150.0" text="SKU" />
+            <TableColumn fx:id="tcId" prefWidth="100.0" text="SKU" />
             <TableColumn fx:id="tcDescripcion" prefWidth="100.0" text="Descripción" />
             <TableColumn fx:id="tcCantidad" prefWidth="100.0" text="Cantidad" />
          </columns>
@@ -78,8 +105,37 @@
    <bottom>
       <HBox alignment="CENTER" spacing="15.0" BorderPane.alignment="CENTER">
          <children>
-            <Button fx:id="btnSave" mnemonicParsing="false" prefWidth="52.0" styleClass="Boton-Azul" text="GUARDAR" />
-            <Button fx:id="btnBorrar" maxHeight="26.0" maxWidth="80.0" minHeight="0.0" minWidth="30.0" mnemonicParsing="false" onAction="#eliminarProducto" prefHeight="0.0" prefWidth="52.0" styleClass="Boton-Rojo" text="BORRAR" />
+            <VBox prefHeight="50.0" prefWidth="500.0">
+               <children>
+                  <HBox prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                     <children>
+                        <Label styleClass="Texto-remarcado-azul" text="Estado: ">
+                           <padding>
+                              <Insets bottom="10.0" left="20.0" />
+                           </padding>
+                        </Label>
+                        <RadioButton fx:id="rBtnEmitida" mnemonicParsing="false" text="Emitida" />
+                        <RadioButton fx:id="rBtnPendiente" mnemonicParsing="false" text="Pendiente" />
+                     </children>
+                  </HBox>
+                  <VBox prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0" spacing="10.0">
+                           <children>
+                              <Button fx:id="btnSave" mnemonicParsing="false" prefWidth="52.0" styleClass="Boton-Azul" text="GUARDAR" />
+                              <Button fx:id="btnBorrar" maxHeight="26.0" maxWidth="220.0" minHeight="0.0" minWidth="30.0" mnemonicParsing="false" onAction="#eliminarProducto" prefHeight="0.0" prefWidth="220.0" styleClass="Boton-Rojo" text="BORRAR" />
+                           </children>
+                           <VBox.margin>
+                              <Insets left="120.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </VBox>
+               </children>
+            </VBox>
          </children>
          <BorderPane.margin>
             <Insets bottom="20.0" />

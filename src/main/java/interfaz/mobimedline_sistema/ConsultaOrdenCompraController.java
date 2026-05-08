@@ -28,6 +28,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.control.cell.ComboBoxTableCell;
 
 
 /**
@@ -215,6 +216,23 @@ public class ConsultaOrdenCompraController implements Initializable {
         tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
         tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
         tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
+        
+        //columna editablo
+        tlcEstatus.setCellFactory(
+            ComboBoxTableCell.forTableColumn("Emitida", "Pendiente")
+        );
+        
+        tlcEstatus.setEditable(true);
+        
+        //guarda cambios
+        tlcEstatus.setOnEditCommit(event -> {
+            ODC orden = event.getRowValue();
+            orden.setEstado(event.getNewValue());
+            
+            ArchivoOdcBase.actualizarODC(orden);
+           
+            tlvLista.refresh(); //actualiza visualmente
+        });
 
         // --- AGREGAR ESTO PARA CENTRAR ---
         tlcIdOrden.setStyle("-fx-alignment: CENTER;");
@@ -231,24 +249,19 @@ public class ConsultaOrdenCompraController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // 1. Cargar datos
-        listaOriginal.clear();
-        List<ODC> datosCargados = ArchivoOdcBase.getOdcBase();
-        if (datosCargados != null) {
-            listaOriginal.addAll(datosCargados);
-        }
-
-        // 2. Configurar la tabla y el filtro inicial (mostrar todo)
+        // 1. Cargar datos desde la base
+        listaOriginal.addAll(ArchivoOdcBase.getOdcBase());
+        
+        //filtro
         listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
+        
+        // 3. Asignar a la tabla
         tlvLista.setItems(listaFiltrada);
-
-        // 3. Configurar columnas (Responsable, etc.)
+        
+        // 4. Configurar columnas (Responsable, etc.)
+        tlvLista.setEditable(true);
         configurarColumnas();
-
-        // 4. Configurar ComboBox
-        cbEstado.setItems(FXCollections.observableArrayList("Emitida", "Pendiente"));
-
+    }
         // IMPORTANTE: Aquí NO agregues listeners a tfIdOrden ni a dpFechaEmision.
         // Al no tener listeners, la tabla no se moverá hasta que presiones el botón.
-    } 
-}
+    }

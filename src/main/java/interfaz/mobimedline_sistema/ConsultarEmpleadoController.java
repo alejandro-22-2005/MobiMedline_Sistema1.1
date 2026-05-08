@@ -158,7 +158,7 @@ public class ConsultarEmpleadoController implements Initializable {
         //Obtener la lista de usuarios que están actualmente en la tabla (ya editados)
         List<Usuarios> listaEditada = new ArrayList<>(tblEmpleados.getItems());
         
-        //eSTE ACTUALIZARA LA LISTA UNA VEZ QUE SE HAGA LAS MODIFICACIONES PERTINENTESD
+        //ESTE ACTUALIZARA LA LISTA UNA VEZ QUE SE HAGA LAS MODIFICACIONES PERTINENTESD
         AgendaUsuariosBase.setUsuariosBase(listaEditada);
         
         //Resetea permisos de visualización por seguridad

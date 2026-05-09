@@ -38,6 +38,11 @@ public class Insumo {
         return cantidad;
     }
     
+    // AGREGADO PARA JAVAFX
+    public int getCantidad(){
+        return cantidad;
+    }
+    
     public void setIdInsumo(String id){
         idInsumo = id;
     }
@@ -48,6 +53,11 @@ public class Insumo {
     
     public void setCantidadPorUnidad(int cantidadPorUnidad){
         this.cantidad = cantidadPorUnidad;
+    }
+    
+    // AGREGADO PARA JAVAFX
+    public void setCantidad(int cantidad){
+        this.cantidad = cantidad;
     }
     
     @Override

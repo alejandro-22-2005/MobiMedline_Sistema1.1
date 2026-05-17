@@ -121,7 +121,7 @@ public class AgregarProductoController {//clase para agregar porductos
         // Validar campos del producto
         if (txtNombre.getText().trim().isEmpty()) {
             mostrarAlerta(Alert.AlertType.WARNING, "Campos vacíos", 
-                    "Por favor completa el código y nombre del producto.");
+                    "Por favor ingresa el nombre del producto.");
             return;
         }
         

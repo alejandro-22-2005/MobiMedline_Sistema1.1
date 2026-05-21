@@ -19,15 +19,13 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 /**
- * FXML Controller class
- *
+ * FXML "Agregar Usuario" Controller
  * @author Mike
  */
 public class AgregarUsuarioController implements Initializable {
@@ -81,92 +79,195 @@ public class AgregarUsuarioController implements Initializable {
     /* --- Eventos de Boton --- */
     @FXML
     private void AccionAceptar() {
-        String pass1 = tfContrasena.getText();
-        String pass2 = tfCContrasena.getText();
+        try {
+            // Validar campos vacíos, contraseñas y que no contengan números
+            validarFormulario();
 
+            // Validar si el usuario está duplicado en la lista estática
+            String usuarioGenerado = lblMostrarUsuario.getText();
+            validarUsuarioUnico(usuarioGenerado);
+
+            // 3. Si todo está perfecto, procedemos a abrir la ventana secundaria
+            procesarAperturaVentana(usuarioGenerado);
+
+        } catch (CamposIncompletosException e) {
+            mostrarAlerta("Campos Incompletos", e.getMessage(), Alert.AlertType.WARNING);
+            
+        } catch (ContrasenasNoCoincidenException e) {
+            mostrarAlerta("Error de Contraseña", e.getMessage(), Alert.AlertType.ERROR);
+            tfContrasena.clear();
+            tfCContrasena.clear();
+            
+        } catch (NombreConNumerosException e) {
+            // Atrapamos si escribieron números en el nombre/apellidos
+            mostrarAlerta("Formato Inválido", e.getMessage(), Alert.AlertType.WARNING);
+            
+        } catch (UsuarioDuplicadoException e) {
+            // Si está repetido, calculamos el siguiente número
+            String usuarioFijo = obtenerUsuario(); // Obtiene las 4 letras (ej: RAAA)
+            int siguienteConsecutivo = calcularSiguienteContador(usuarioFijo);
+            
+            // Formateamos con dos dígitos ("02", "03")
+            String nuevoUsuarioCorregido = usuarioFijo + String.format("%02d", siguienteConsecutivo);
+            
+            // Le avisamos al usuario mediante una alerta informativa
+            mostrarAlerta("Usuario Ajustado", 
+                "El identificador '" + lblMostrarUsuario.getText() + "' ya existe.\n" +
+                "Se ha asignado automáticamente el consecutivo disponible: " + nuevoUsuarioCorregido, 
+                Alert.AlertType.INFORMATION);
+            
+            // Actualizamos la etiqueta visual y procedemos con el registro corregido
+            lblMostrarUsuario.setText(nuevoUsuarioCorregido);
+            try {
+                procesarAperturaVentana(nuevoUsuarioCorregido);
+            } catch (IOException ioException) {
+                mostrarAlerta("Error de Sistema", "No se pudo cargar la ventana de resumen al reintentar: " + ioException.getMessage(), Alert.AlertType.ERROR);
+            }
+            
+        } catch (IOException e) {
+            mostrarAlerta("Error de Sistema", "No se pudo cargar la ventana de resumen: " + e.getMessage(), Alert.AlertType.ERROR);
+        }
+    }
+    
+  
+    /**
+     * Lógica aislada para abrir la ventana de recapitulación
+     * @param usuarioFinal Usuario a vincular a los datos proporcionados en el formulario
+     * @author Mike
+     */
+    private void procesarAperturaVentana(String usuarioFinal) throws IOException {
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("RecapitulacionUsuario.fxml"));
+        Parent root = loader.load();
+
+        RecapitulacionUsuarioController secundaryCtrl = loader.getController();
+
+        secundaryCtrl.recibirDatos(
+            tfNombre.getText(),
+            tfAPaterno.getText(),
+            tfAMaterno.getText(),
+            usuarioFinal, // Enviamos el usuario final (ya sea el original o el auto-incrementado)
+            tfContrasena.getText() 
+        );
+
+        Stage stage = new Stage();
+        stage.initStyle(StageStyle.TRANSPARENT);
+        stage.setResizable(false);               
+
+        Scene scene = new Scene(root);
+        scene.setFill(Color.TRANSPARENT);        
+
+        stage.setScene(scene);
+        stage.initModality(Modality.APPLICATION_MODAL); 
+        stage.showAndWait();
+        
+        limpiarCampos();
+    }
+    
+    
+    /* --- Funciones de validacion --- */
+    
+    /**
+     * Validaciones del formulario incluyendo formato de texto
+     * @Mike
+     */
+    private void validarFormulario() throws CamposIncompletosException, ContrasenasNoCoincidenException, NombreConNumerosException {
         // Validar que los campos no estén vacíos
         if (tfNombre.getText().isEmpty() || tfAPaterno.getText().isEmpty() || tfAMaterno.getText().isEmpty() || 
-            tfContrasena.getText().isEmpty() || tfCContrasena.getText().isEmpty()){
-            // Lanza alerta si es el caso.
-            mostrarAlerta("Campos Incompletos", "Por favor, llena todos los campos obligatorios.", Alert.AlertType.WARNING);
-            return;
+            tfContrasena.getText().isEmpty() || tfCContrasena.getText().isEmpty()) {
             
+            throw new CamposIncompletosException("Por favor, llena todos los campos obligatorios.");
+        }
+
+        // NUEVO: Validar que no existan dígitos numéricos en los nombres/apellidos
+        if (tfNombre.getText().matches(".*\\d.*") || tfAPaterno.getText().matches(".*\\d.*") || tfAMaterno.getText().matches(".*\\d.*")) {
+            throw new NombreConNumerosException("Los campos de Nombre y Apellidos no pueden contener números.");
         }
 
         // Comprobar que las contraseñas coinciden
         if (!tfContrasena.getText().equals(tfCContrasena.getText())) {
-            
-            mostrarAlerta("Error de Contraseña", "Las contraseñas no coinciden. Inténtalo de nuevo.", Alert.AlertType.ERROR);
-            tfContrasena.clear();
-            tfCContrasena.clear();
-            return;
-            
+            throw new ContrasenasNoCoincidenException("Las contraseñas no coinciden. Inténtalo de nuevo.");
         }
-        
-        // --- NUEVO: SI TODO ESTÁ BIEN, ABRIMOS LA VENTANA SECUNDARIA ---
-        try {
-            // Cargamos el FXML de la ventana de resumen
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("RecapitulacionUsuario.fxml"));
-            Parent root = loader.load();
-
-            // Obtenemos el controlador de la ventana secundaria para pasarle los datos
-            // Asegúrate de que tu clase se llame ReporteUsuarioController
-            RecapitulacionUsuarioController secundaryCtrl = loader.getController();
-
-            // Enviamos los datos (Nombre, Apellidos combinados, Usuario generado y Contraseña)
-            secundaryCtrl.recibirDatos(
-                tfNombre.getText(),
-                tfAPaterno.getText(),// + " " + 
-                tfAMaterno.getText(),
-                lblMostrarUsuario.getText(),
-                tfContrasena.getText() 
-            );
-
-            // Configuramos el Stage (La ventana)
-            Stage stage = new Stage();
-            stage.initStyle(StageStyle.TRANSPARENT); // Para tus bordes redondeados
-            stage.setResizable(false);               // Bloqueamos maximizar
-
-            Scene scene = new Scene(root);
-            scene.setFill(Color.TRANSPARENT);        // Fondo transparente para el radio de 10
-
-            stage.setScene(scene);
-            stage.initModality(Modality.APPLICATION_MODAL); // Bloquea la ventana de atrás
-            stage.showAndWait();
-            
-            limpiarCampos();
-
-        } catch (IOException e) {
-            mostrarAlerta("Error de Sistema", "No se pudo cargar la ventana de resumen: " + e.getMessage(), Alert.AlertType.ERROR);
-        }
-        
     }
     
     
-    /* --- Funciones generales --- */
-    // Funcion para limpia los campos
-    private void limpiarCampos() {
+    /**
+     * Verifica si el ID ya existe en la simulación de Base de Datos
+     * *** Warning: Se espera modificar esta fucnion con la entrada de la base de datos ***
+     * @param usuarioAChecar Usuario a validar
+     * @author Mike
+     */
+    private void validarUsuarioUnico(String usuarioAChecar) throws UsuarioDuplicadoException {
+        // Recorremos la lista estática que tienes en AgendaUsuariosBase
+        for (Usuarios u : AgendaUsuariosBase.getUsuariosBase()) {
+            // Buscamos si el ID de usuario ya está tomado (asumiendo que tienes un getter getUsuario() en la clase Usuarios)
+            if (u.getUsuario().equalsIgnoreCase(usuarioAChecar)) {
+                throw new UsuarioDuplicadoException("El usuario '" + usuarioAChecar + "' ya se encuentra registrado.");
+            }
+        }
+    }
+
+    
+    /**
+     * Busca en la lista base cuántos usuarios comparten las mismas 4 letras de usuario
+     * y determina el siguiente número consecutivo disponible (+1)
+     * @param inicialesCuatroLetras Usuario a buscar en la agenda usuario
+     * @author Mike
+     */
+    private int calcularSiguienteContador(String inicialesCuatroLetras) {
+        int maxContador = 1;
         
+        for (Usuarios u : AgendaUsuariosBase.getUsuariosBase()) {
+            String idExistente = u.getUsuario(); // Ejemplo: "DOSJ01"
+            
+            if (idExistente.length() >= 4 && idExistente.substring(0, 4).equalsIgnoreCase(inicialesCuatroLetras)) {
+                try {
+                    // Extraemos los dígitos del final (posiciones de la 4 en adelante)
+                    int numeroAsignado = Integer.parseInt(idExistente.substring(4));
+                    if (numeroAsignado >= maxContador) {
+                        maxContador = numeroAsignado + 1; // Incrementamos en 1 sobre el máximo encontrado
+                    }
+                } catch (NumberFormatException e) {
+                    // Si por alguna razón los últimos caracteres no eran números, se ignora de manera segura
+                }
+            }
+        }
+        return maxContador;
+    }
+    
+    
+    /**
+     * Limpia los campos del formulario
+     * @author Mike
+     */
+    private void limpiarCampos() {
         tfNombre.clear();
         tfAPaterno.clear();
         tfAMaterno.clear();
         tfContrasena.clear();
         tfCContrasena.clear();
-
     }
     
-    // Funcion para la ventana emergente
+    
+    /**
+     * Funcion para la ventana emergente
+     * @param titulo Se titulo de la ventana
+     * @param mensaje Mensaje en el cuerpo de la ventana
+     * @param tipo tipo de mensaje(icono)
+     * @author Mike
+     */
     private void mostrarAlerta(String titulo, String mensaje, Alert.AlertType tipo) {
-        
         Alert alerta = new Alert(tipo);
         alerta.setTitle(titulo);
         alerta.setHeaderText(null);
         alerta.setContentText(mensaje);
         alerta.showAndWait();
-        
     }
     
-    // Funcion para resumir los datos ingresados
+    
+    /**
+     * Funcion para generar al usario(logica CURP)
+     * @return Usuario de 4 letras 2 numeros
+     */
     private String obtenerUsuario() {
         String nom = tfNombre.getText().trim().toUpperCase();
         String pat = tfAPaterno.getText().trim().toUpperCase();
@@ -190,12 +291,13 @@ public class AgregarUsuarioController implements Initializable {
         // Inicial del segundo apellido (si no hay, usamos X)
         char p3 = mat.isEmpty() ? 'X' : mat.charAt(0);
 
-        // 4. Inicial del nombre
+        // Inicial del nombre
         char p4 = nom.charAt(0);
 
         return "" + p1 + p2 + p3 + p4;
     }
     
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // Creamos una función que actualice la etiqueta

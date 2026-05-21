@@ -3,6 +3,7 @@ package interfaz.mobimedline_sistema;
 import java.net.URL;
 import java.util.Optional;
 import java.util.ResourceBundle;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -11,7 +12,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.control.cell.TextFieldTableCell;
-import javafx.util.converter.IntegerStringConverter;
 
 // se modifica esta clase 
 
@@ -60,8 +60,11 @@ public class ConsultarProductoController implements Initializable {
         );
 
         // Muestra la cantidad en la tabla derecha
-        colUnidad.setCellValueFactory(
-                new PropertyValueFactory<>("cantidad")
+        colUnidad.setCellValueFactory(cellData ->
+
+                new SimpleObjectProperty<>(
+                        cellData.getValue().getCantidad()
+                )
         );
 
         // Habilitar edición de tablas
@@ -109,26 +112,106 @@ public class ConsultarProductoController implements Initializable {
             );
         });
 
-        // EDITAR CANTIDAD
-        colUnidad.setCellFactory(
-                TextFieldTableCell.forTableColumn(
-                        new IntegerStringConverter()
-                )
-        );
+        // EXCEPCIÓN PARA VALIDAR CANTIDADES NEGATIVAS O CERO
+        
+        // DOBLE CLICK PARA EDITAR CANTIDAD
+        tvInsumos.setOnMouseClicked(event -> {
 
-        colUnidad.setOnEditCommit(event -> {
+            if (event.getClickCount() == 2) {
 
-            Insumo insumo = event.getRowValue();
+                Insumo insumo =
+                        tvInsumos.getSelectionModel()
+                                .getSelectedItem();
 
-            insumo.setCantidad(
-                    event.getNewValue()
-            );
+                if (insumo != null) {
 
-            tvInsumos.refresh();
+                    TextInputDialog dialog =
+                            new TextInputDialog(
+                                    String.valueOf(
+                                            insumo.getCantidad()
+                                    )
+                            );
 
-            mostrarAlerta(
-                    "Cantidad actualizada."
-            );
+                    dialog.setTitle(
+                            "Editar Cantidad"
+                    );
+
+                    dialog.setHeaderText(null);
+
+                    dialog.setContentText(
+                            "Ingrese nueva cantidad:"
+                    );
+
+                    Optional<String> resultado =
+                            dialog.showAndWait();
+
+                    if (resultado.isPresent()) {
+
+                        try {
+
+                            int nuevaCantidad =
+                                    Integer.parseInt(
+                                            resultado.get()
+                                    );
+
+                            // VALIDAR SOLO NÚMEROS POSITIVOS
+                            if (nuevaCantidad <= 0) {
+
+                                throw new IllegalArgumentException(
+                                        "La cantidad debe ser mayor a 0."
+                                );
+                            }
+
+                            // GUARDAR NUEVA CANTIDAD
+                            insumo.setCantidad(
+                                    nuevaCantidad
+                            );
+
+                            tvInsumos.refresh();
+
+                            tvProductos.refresh();
+
+                            mostrarAlerta(
+                                    "Cantidad actualizada correctamente."
+                            );
+
+                        } catch (NumberFormatException e) {
+
+                            Alert alert =
+                                    new Alert(Alert.AlertType.ERROR);
+
+                            alert.setTitle(
+                                    "ERROR DE FORMATO"
+                            );
+
+                            alert.setHeaderText(null);
+
+                            alert.setContentText(
+                                    "Solo se permiten números."
+                            );
+
+                            alert.showAndWait();
+
+                        } catch (IllegalArgumentException e) {
+
+                            Alert alert =
+                                    new Alert(Alert.AlertType.ERROR);
+
+                            alert.setTitle(
+                                    "ERROR DE INVENTARIO"
+                            );
+
+                            alert.setHeaderText(null);
+
+                            alert.setContentText(
+                                    e.getMessage()
+                            );
+
+                            alert.showAndWait();
+                        }
+                    }
+                }
+            }
         });
 
         // Listener de selección
@@ -349,6 +432,8 @@ public class ConsultarProductoController implements Initializable {
 
         if (resultado.isPresent()
                 && resultado.get() == ButtonType.OK) {
+
+            refrescarLista();
 
             tvProductos.refresh();
 

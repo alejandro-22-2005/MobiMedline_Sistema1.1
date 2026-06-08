@@ -15,9 +15,9 @@ import java.util.Map;
  */
 public class ODC {
     // --- Atributos --- 
-    private static int contadorSiguiente = 1;
+    //private static int contadorSiguiente = 1;
     
-    private final String idODC;
+    private String idODC;
     private final List<Producto> productos;
     private boolean tipoEspecial;
     private Usuarios responsable;
@@ -28,7 +28,8 @@ public class ODC {
     // --- Constructor ---
     public ODC() {
         // Genera el ID con formato #####-ODC (ej. 00001-ODC)
-        this.idODC = String.format("%05d-ODC", contadorSiguiente++);
+        String id = "";
+        this.idODC = id; //String.format("%05d-ODC", contadorSiguiente++);
         this.productos = new ArrayList<>();
         this.tipoEspecial = false;
         this.responsable = null;
@@ -38,7 +39,7 @@ public class ODC {
     
     public ODC(Usuarios responsable, String fecha, String estado) {
         // Genera el ID con formato #####-ODC (ej. 00001-ODC)
-        this.idODC = String.format("%05d-ODC", contadorSiguiente++);
+        this.idODC = ""; //String.format("%05d-ODC", contadorSiguiente++);
         this.productos = new ArrayList<>();
         this.tipoEspecial = false;
         this.responsable = responsable;
@@ -207,5 +208,8 @@ public class ODC {
 
     public void setResponsable(Usuarios responsable) {
         this.responsable = responsable;
+    }
+    public void setIdODC (String id){
+        this.idODC = id;
     }
 }

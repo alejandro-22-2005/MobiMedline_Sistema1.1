@@ -27,7 +27,26 @@ public class Usuarios {
         Permisos = false;
     }
     
+    public Usuarios(String usuario, String nombre){
+        this.usuario = usuario; 
+        this.nombre = nombre;
+        apellidoPaterno = "";
+        apellidoMaterno = "";
+        this.contraseña = "";
+        Permisos = false;
+    }
+    
+    public Usuarios(){
+        this.usuario = ""; 
+        this.nombre = "";
+        apellidoPaterno = "";
+        apellidoMaterno = "";
+        this.contraseña = "";
+        Permisos = false;
+    }
+    
     // --- Getters
+    
     public String getNombre() {
         return nombre;
     }

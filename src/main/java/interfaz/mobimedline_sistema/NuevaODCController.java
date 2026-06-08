@@ -57,7 +57,10 @@ public class NuevaODCController implements Initializable {
     private FilteredList<Producto> filteredProducts;
     private ListView<Producto> suggestionList;
     private Popup suggestionPopup;
-
+    
+    // Instanciamos el DAO encargado de la conexión con Supabase
+    private final ODCDAO odcDAO = new ODCDAO();
+    
     private boolean esEmpleado() {
         return !IniciarSesController.usuarioActual.getPermisos();
     }
@@ -103,6 +106,7 @@ public class NuevaODCController implements Initializable {
         }
         int cantidad;
         try {
+            max_unidades_try:
             cantidad = Integer.parseInt(textoCantidad);
         } catch (NumberFormatException e) {
             mostrarAlerta("Dato inválido",
@@ -126,6 +130,7 @@ public class NuevaODCController implements Initializable {
                 return;
             }
         }
+        
         Producto productoCopia = CatalogoProductosBase.buscarPorSku(textoId);
         if (productoCopia == null) {
             mostrarAlerta("Producto no encontrado","No existe un producto con el ID: "+ textoId);
@@ -157,18 +162,28 @@ public class NuevaODCController implements Initializable {
             nuevaODC.actualizarOAgregarProducto(producto,producto.getCantidad()
             );
         }
-        ArchivoOdcBase.agregarODC(nuevaODC);
-        DashboardController.lista.add(new DashboardController.Orden(nuevaODC.getIdODC(),
-                        nuevaODC.getFechaODC(),
-                        nuevaODC.getResponsable().getUsuario(),
-                        nuevaODC.getEstado()
-                )
-        );
-
-        mostrarInformacion("ODC guardada","Se guardó la orden: "+ nuevaODC.getIdODC()
-        );
-
-        listaProductos.clear();
+        
+        // 2. Intentamos realizar la inserción transaccional por lotes en la base de datos
+        boolean exitoBD = odcDAO.insertar(nuevaODC);
+        
+        if (exitoBD) {
+            // 3. Si la base de datos procesó todo correctamente, actualizamos el Dashboard visual
+            /*
+            DashboardController.lista.add(new DashboardController.Orden(
+                    nuevaODC.getIdODC(),
+                    nuevaODC.getFechaODC(),
+                    nuevaODC.getResponsable().getUsuario(),
+                    nuevaODC.getEstado()
+            ));
+            */
+            mostrarInformacion("ODC registrada con éxito", "Se guardó correctamente la orden: " + nuevaODC.getIdODC());
+            
+            // Limpiamos la memoria interna del formulario únicamente al confirmar persistencia
+            listaProductos.clear();
+        } else {
+            // En caso de corte de red o error de BD, alertamos y mantenemos los datos intactos en la tabla para no perder el progreso
+            mostrarAlerta("Error de persistencia", "No se pudo registrar la ODC en la base de datos. Verifique su conexión.");
+        }
     }
 
     private void configurarBusquedaProducto() {
@@ -177,16 +192,16 @@ public class NuevaODCController implements Initializable {
         suggestionList = new ListView<>(filteredProducts);
         suggestionList.setCellFactory(lv -> new ListCell<Producto>() {
 
-    @Override
-    protected void updateItem(Producto item,boolean empty){
-        super.updateItem(item, empty);
-        if (empty || item == null) {
-            setText(null);
-        } else {
-            setText(item.getDescripcion()
-            );
-        }
-    }
+            @Override
+            protected void updateItem(Producto item,boolean empty){
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    setText(item.getDescripcion()
+                    );
+                }
+            }
         });
         suggestionList.setPrefWidth(
                 txtFieldProducto.getPrefWidth()

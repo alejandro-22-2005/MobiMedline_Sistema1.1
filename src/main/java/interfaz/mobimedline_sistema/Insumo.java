@@ -6,7 +6,7 @@ package interfaz.mobimedline_sistema;
 
 public class Insumo {
     // --- Atributos --- 
-    private static int contadorSiguiente = 1;
+    //private static int contadorSiguiente = 1;
     
     private String idInsumo;
     private String nombre;
@@ -14,7 +14,7 @@ public class Insumo {
     
     // --- Constructor ---
     public Insumo(String nombre, int cantidadPorUnidad){
-        this.idInsumo = String.format("%05d", contadorSiguiente++);
+        this.idInsumo = ""; //String.format("%05d", contadorSiguiente++);
         this.nombre = nombre;
         this.cantidad = cantidadPorUnidad;
     }

@@ -79,29 +79,44 @@ public class RecapitulacionUsuarioController {
     /* --- Eventos de Boton --- */
     @FXML
     private void AccionConfirmarGuardado(ActionEvent event) {
-        
-        // Usamos los datos manuales para crear el objeto Usuarios
-        Usuarios nuevo = new Usuarios(usuG, nomG, patG, matG, passG);
-    
-        //Lo metemos a la lista donde están los de prueba
-        AgendaUsuariosBase.getUsuariosBase().add(nuevo); 
-        
-        //Autor:Ale
-        
-        // --- AQUÍ ES DONDE OCURRE EL GUARDADO REAL ---
-        System.out.println("Insertando en la DB al usuario: " + lblMostrarUsuario.getText());
-        
-        // Simulación de guardado exitoso
-        Alert exito = new Alert(Alert.AlertType.INFORMATION);
-        exito.setTitle("Registro Exitoso");
-        exito.setHeaderText(null);
-        exito.setContentText("El usuario " + lblMostrarUsuario.getText() + " ha sido guardado en el sistema.");
-        exito.showAndWait();
 
-        // Cerramos la ventana después de guardar
-        Stage stage = (Stage) lblNombre.getScene().getWindow();
-        stage.close();
+        // 1. Creamos el objeto Usuarios con los datos capturados
+        Usuarios nuevo = new Usuarios(usuG, nomG, patG, matG, passG);
+
+        // 2. Instanciamos tu DAO para interactuar con Supabase
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+
+        // --- AQUÍ OCURRE EL GUARDADO REAL ---
+        System.out.println("Insertando en la DB al usuario: " + lblMostrarUsuario.getText());
+
+        // Llamamos al método registrar del DAO y evaluamos si la inserción fue exitosa
+        boolean guardadoExitoso = usuarioDao.registrar(nuevo);
+
+        if (guardadoExitoso) {
+            // Si se guardó en Supabase, actualizamos la lista local de respaldo (opcional)
+            AgendaUsuariosBase.getUsuariosBase().add(nuevo); 
+
+            // Mostramos el mensaje de éxito real
+            Alert exito = new Alert(Alert.AlertType.INFORMATION);
+            exito.setTitle("Registro Exitoso");
+            exito.setHeaderText(null);
+            exito.setContentText("El usuario " + lblMostrarUsuario.getText() + " ha sido guardado exitosamente en la base de datos.");
+            exito.showAndWait();
+
+            // Cerramos la ventana únicamente si se guardó con éxito
+            Stage stage = (Stage) lblNombre.getScene().getWindow();
+            stage.close();
+
+        } else {
+            // Si hubo un problema de conexión o error de SQL, avisamos al usuario sin cerrar la ventana
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setTitle("Error de Guardado");
+            error.setHeaderText("No se pudo registrar el usuario");
+            error.setContentText("Hubo un problema al conectar con Supabase. Verifica tu conexión de red o si el nombre de usuario ya existe.");
+            error.showAndWait();
+        }
     }
+    
     
     @FXML
     private void AccionCancelarGuardado(ActionEvent event) {

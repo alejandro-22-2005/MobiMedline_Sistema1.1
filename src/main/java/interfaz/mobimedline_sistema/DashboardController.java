@@ -23,33 +23,37 @@ public class DashboardController implements Initializable {
     @FXML private Label lblProcesadas;
     @FXML private Label lblEspeciales;
 
-    @FXML private TableView<Orden> tablaOrdenes;
-    @FXML private TableColumn<Orden, String> colId;
-    @FXML private TableColumn<Orden, String> colFecha;
-    @FXML private TableColumn<Orden, String> colUsuario;
-    @FXML private TableColumn<Orden, String> colEstado;
+    @FXML private TableView<ODC> tablaOrdenes;
+    @FXML private TableColumn<ODC, String> colId;
+    @FXML private TableColumn<ODC, String> colFecha;
+    @FXML private TableColumn<ODC, String> colUsuario;
+    @FXML private TableColumn<ODC, String> colEstado;
 
-    public static ObservableList<Orden> lista = FXCollections.observableArrayList();
-
+    public static ObservableList<ODC> lista = FXCollections.observableArrayList();
+    
+    // Instanciamos el DAO de persistencia que conecta con Supabase
+    private final ODCDAO odcDAO = new ODCDAO();
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
 
         colId.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getId()));
+                        data.getValue().getIdODC()));
 
         colFecha.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getFecha()));
+                        data.getValue().getFechaODC()));
 
-        colUsuario.setCellValueFactory(data ->
-                new javafx.beans.property.SimpleStringProperty(
-                        data.getValue().getUsuario()));
+        colUsuario.setCellValueFactory(data -> {
+            var responsable = data.getValue().getResponsable();
+            return new javafx.beans.property.SimpleStringProperty(responsable != null ? responsable.getUsuario() : "N/A");
+        }); //
 
         colEstado.setCellValueFactory(data ->
                 new javafx.beans.property.SimpleStringProperty(
                         data.getValue().getEstado()));
-
+        /*
         if (lista.isEmpty()) {
 
             lista.addAll(
@@ -58,7 +62,8 @@ public class DashboardController implements Initializable {
                 new Orden("0003-ODC", "2026-04-25", "RAAA01", "Pendiente")
             );
         }
-
+        */
+        cargarDatosDesdeSupabase();
         tablaOrdenes.setItems(lista);
 
         // =========================================
@@ -77,31 +82,47 @@ public class DashboardController implements Initializable {
 
         // =========================================
 
-        lista.addListener((javafx.collections.ListChangeListener.Change<? extends Orden> c) -> {
+        lista.addListener((javafx.collections.ListChangeListener.Change<? extends ODC> c) -> {
             actualizarContadores();
             tablaOrdenes.refresh();
         });
 
         actualizarContadores();
     }
-
+    
+    private void cargarDatosDesdeSupabase() {
+        try {
+            lista.clear();
+            // Traemos las órdenes reales mapeadas con sus productos y usuarios
+            lista.addAll(odcDAO.obtenerTodas());
+        } catch (Exception e) {
+            System.err.println("Error al sincronizar el Dashboard con Supabase: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+    
     private void actualizarContadores() {
 
         int pendientes = 0;
-        int procesadas = 0;
-        int especiales = 0;
+        int procesadas = 0; // Se mapea al estado "Emitida" de la base de datos
+        int especiales = 0;  // Cuenta cuántas órdenes vigentes son de tipo especial
 
-        for (Orden o : lista) {
-            switch (o.getEstado()) {
-                case "Pendiente":
-                    pendientes++;
-                    break;
-                case "Emitida":
-                    procesadas++;
-                    break;
-                case "En Proceso":
-                    especiales++;
-                    break;
+        for (ODC o : lista) {
+            // Contadores por estado de la Ficha ODC
+            if (o.getEstado() != null) {
+                switch (o.getEstado()) {
+                    case "Pendiente":
+                        pendientes++;
+                        break;
+                    case "Emitida":
+                        procesadas++;
+                        break;
+                }
+            }
+            
+            // Contador de órdenes con requerimientos especiales
+            if (o.getTipoEspecial()) {
+                especiales++;
             }
         }
 
@@ -110,35 +131,4 @@ public class DashboardController implements Initializable {
         lblEspeciales.setText(String.valueOf(especiales));
     }
 
-    public static class Orden {
-
-        private String id;
-        private String fecha;
-        private String usuario;
-        private String estado;
-
-        public Orden(String id, String fecha, String usuario, String estado) {
-
-            this.id = id;
-            this.fecha = fecha;
-            this.usuario = usuario;
-            this.estado = estado;
-        }
-
-        public String getId() {
-            return id;
-        }
-
-        public String getFecha() {
-            return fecha;
-        }
-
-        public String getUsuario() {
-            return usuario;
-        }
-
-        public String getEstado() {
-            return estado;
-        }
-    }
 }

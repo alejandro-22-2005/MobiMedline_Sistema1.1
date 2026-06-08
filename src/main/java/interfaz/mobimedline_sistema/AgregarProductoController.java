@@ -1,14 +1,23 @@
 package interfaz.mobimedline_sistema;
 
+import java.util.List;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
-import javafx.scene.control.*;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.TableCell;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 
-import interfaz.mobimedline_sistema.Producto;
-
-public class AgregarProductoController {//clase para agregar porductos
+/**
+ * clase para agregar porductos
+ * @author Alejandro
+ */
+public class AgregarProductoController {
 
     @FXML 
     private TextField txtCodigo;
@@ -29,7 +38,10 @@ public class AgregarProductoController {//clase para agregar porductos
     
     private ObservableList<Insumo> listaInsumos = FXCollections.observableArrayList();
     
-
+    // Instancias de acceso a datos distribuidas
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final InsumoDAO insumoDAO = new InsumoDAO();
+    
     @FXML
     public void initialize() {
         // Configurar columnas de la tabla
@@ -74,10 +86,10 @@ public class AgregarProductoController {//clase para agregar porductos
         
         // Nueva validación de primera letra en mayúscula
         try {
-        validarPrimeraMayuscula(nombreNuevo);
+            validarPrimeraMayuscula(nombreNuevo);
         } catch (IllegalArgumentException e) {
-        mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
-        return;
+            mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
+            return;
         }
         
         //String nombreFormateado = capitalizar(nombreNuevo);
@@ -103,9 +115,34 @@ public class AgregarProductoController {//clase para agregar porductos
             return;
         }
         
-        // Crear y agregar insumo
-        Insumo insumo = new Insumo(txtNombreInsumo.getText().trim(), cantidad);
-        listaInsumos.add(insumo);
+        List<Insumo> todosLosInsumosBD = insumoDAO.listar();
+        Insumo insumoExistenteBD = todosLosInsumosBD.stream()
+            .filter(i -> i.getNombre().equalsIgnoreCase(nombreNuevo))
+            .findFirst()
+            .orElse(null);
+            
+        Insumo insumoParaTabla;
+        if (insumoExistenteBD != null) {
+            // Si ya existe en la BD, reciclamos su ID único real y le asociamos la nueva cantidad para esta receta
+            insumoParaTabla = new Insumo(insumoExistenteBD.getIdInsumo(), insumoExistenteBD.getNombre(), cantidad);
+        } else {
+            // Si es un insumo completamente nuevo, creamos uno temporal sin ID asignado aún 
+            // (Se insertará en catálogo o se creará en cascada)
+            insumoParaTabla = new Insumo(nombreNuevo, cantidad);
+            
+            // Opcional: registrarlo inmediatamente en el catálogo global de insumos de la BD
+            insumoDAO.insertar(insumoParaTabla);
+            // Volvemos a consultar para recuperar el ID autogenerado de la identidad de Supabase
+            insumoExistenteBD = insumoDAO.listar().stream()
+                .filter(i -> i.getNombre().equalsIgnoreCase(nombreNuevo))
+                .findFirst()
+                .orElse(insumoParaTabla);
+                
+            insumoParaTabla.setIdInsumo(insumoExistenteBD.getIdInsumo());
+        }
+        
+        // Agregar insumo a nuestra lista observable vinculada al TableView
+        listaInsumos.add(insumoParaTabla);
         
         // Limpiar campos de insumo
         txtNombreInsumo.clear();
@@ -133,21 +170,21 @@ public class AgregarProductoController {//clase para agregar porductos
         
         //Se modifico esto 
         try {
-        validarPrimeraMayuscula(nombreProd);
+            validarPrimeraMayuscula(nombreProd);
         } catch (IllegalArgumentException e) {
-        mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
-        return;
+            mostrarAlerta(Alert.AlertType.ERROR, "Formato inválido", e.getMessage());
+            return;
         }
         
         //Este se hizo para que cuando se captures un producto pase por una condcional en el cual 
         //se evaluara si es existente o es nuevo
-        boolean productoRepetido = CatalogoProductosBase.getProductosBase().stream()
+        boolean productoRepetido = productoDAO.listar().stream()
             .anyMatch(p -> p.getDescripcion().equalsIgnoreCase(nombreProd));
 
         if (productoRepetido) {
-        mostrarAlerta(Alert.AlertType.ERROR, "Producto existente", 
-                "Ya existe un producto registrado con el nombre: " + nombreProd);
-        return;
+            mostrarAlerta(Alert.AlertType.ERROR, "Producto existente", 
+                    "Ya existe un producto registrado con el nombre: " + nombreProd);
+            return;
         }
         
         // Crear el producto
@@ -158,26 +195,38 @@ public class AgregarProductoController {//clase para agregar porductos
             producto.agregarInsumo(insumo);
         }
         
-        //Con esto se manda los recibido de agregar a producto a catalogobasdeproductos y de catalogo se muestre a el procuto nuevo
-        CatalogoProductosBase.setProductosBase(producto);//Para mostrar en catalogo se agregaa al base de catalogo de productos// Autor:Alejandro
+        // === PERSISTENCIA REMOTA ===
+        // Mandamos el objeto completo al ProductoDAO para que guarde en PRODUCTO y en PRODUCTO_INSUMO por lotes
+        boolean guardadoExitoso = productoDAO.insertar(producto);
         
-        // Mostrar resumen
-        StringBuilder resumen = new StringBuilder();
-        resumen.append("Producto guardado exitosamente:\n\n");
-        resumen.append("SKU: ").append(producto.getSku()).append("\n");
-        resumen.append("Nombre: ").append(producto.getDescripcion()).append("\n");
-        //resumen.append("Total de insumos: ").append(producto.getTotalInsumos()).append("\n\n");
-        resumen.append("Lista de insumos:\n");
+        if (guardadoExitoso) {
+            // Recuperamos el listado actualizado para obtener el SKU autogenerado por Supabase
+            List<Producto> listaActualizada = productoDAO.listar();
+            Producto productoGuardadoReal = listaActualizada.stream()
+                .filter(p -> p.getDescripcion().equalsIgnoreCase(nombreProd))
+                .findFirst()
+                .orElse(producto);
+
+            // Construcción del resumen informativo para el usuario
+            StringBuilder resumen = new StringBuilder();
+            resumen.append("Producto guardado exitosamente en la Base de Datos:\n\n");
+            resumen.append("SKU Asignado: ").append(productoGuardadoReal.getSku()).append("\n");
+            resumen.append("Nombre: ").append(productoGuardadoReal.getDescripcion()).append("\n\n");
+            resumen.append("Lista de insumos enlazados:\n");
+            
+            for (Insumo insumo : productoGuardadoReal.getInsumos()) {
+                resumen.append("  • ").append(insumo.getNombre())
+                       .append(" - ").append(insumo.getCantidadPorUnidad()).append(" unidades\n");
+            }
         
-        for (Insumo insumo : producto.getInsumos()) {
-            resumen.append("  • ").append(insumo.getNombre())
-                   .append(" - ").append(insumo.getCantidadPorUnidad()).append(" unidades\n");
+            mostrarAlerta(Alert.AlertType.INFORMATION, "Producto guardado", resumen.toString());
+
+            // Limpiar todo después de guardar
+            limpiarTodo();
+        } else {
+            mostrarAlerta(Alert.AlertType.ERROR, "Error de Persistencia", 
+                    "Hubo un problema de conexión con el servidor de Supabase. El producto no fue guardado.");
         }
-        
-        mostrarAlerta(Alert.AlertType.INFORMATION, "Producto guardado", resumen.toString());
-        
-        // Limpiar todo después de guardar
-        limpiarTodo();
     }
 
     @FXML
@@ -216,10 +265,10 @@ public class AgregarProductoController {//clase para agregar porductos
     
     //Este metodo sirve para que cheque o valide el nombre tiene el formato para la primera mayuscula
     private void validarPrimeraMayuscula(String texto) throws IllegalArgumentException {
-    if (texto == null || texto.isEmpty()) return;
+        if (texto == null || texto.isEmpty()) return;
 
-    if (!Character.isUpperCase(texto.charAt(0))) {
-        throw new IllegalArgumentException("Solo la primer letra tiene deber ser MAYÚSCULA.");
+        if (!Character.isUpperCase(texto.charAt(0))) {
+            throw new IllegalArgumentException("Solo la primer letra tiene deber ser MAYÚSCULA.");
         }
     }
 }

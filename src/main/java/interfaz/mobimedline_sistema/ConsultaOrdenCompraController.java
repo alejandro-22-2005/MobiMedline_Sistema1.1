@@ -79,132 +79,123 @@ public class ConsultaOrdenCompraController implements Initializable {
     
     private ObservableList<ODC> listaOriginal = FXCollections.observableArrayList();
     private FilteredList<ODC> listaFiltrada;
+    
+    // Instancia de persistencia real hacia Supabase
+    private final ODCDAO odcDAO = new ODCDAO();
    
     @FXML
     private void handleVerDetalles(ActionEvent event) {
         ODC seleccion = tlvLista.getSelectionModel().getSelectedItem();
 
         if (seleccion == null) {
-            // ... alerta de selección vacía ...
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Atención");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, seleccione una orden de la tabla para ver su detalle.");
+            alert.showAndWait();
             return;
         }
 
         StringBuilder detalle = new StringBuilder();
-        Map<String, Integer> conteoInsumosTotal = new HashMap<>();
-
-        // Usamos el método que ya programaste en ODC para no repetir lógica
-        List<Insumo> totales = seleccion.obtenerTotalesPorId();
-
+        List<Insumo> totales = odcDAO.obtenerInsumosDeOrden(seleccion.getIdODC());
+        
+        // 1. Mostrar resumen de insumos totales consolidados
         detalle.append("--- RESUMEN DE INSUMOS TOTALES ---\n");
-        for (Insumo i : totales) {
-            detalle.append("- ").append(i.getNombre())
-                   .append(": ").append(i.getCantidadPorUnidad()).append(" unidades\n");
+        if (totales.isEmpty()) {
+            detalle.append("No se encontraron registros de insumos para esta orden en Supabase.\n");
+        } else {
+            for (Insumo i : totales) {
+                // Imprime el nombre y la cantidad total de la tabla odc_insumo
+                detalle.append("- ").append(i.getNombre())
+                       .append(": ").append(i.getCantidadPorUnidad()).append(" unidades\n");
+            }
         }
-
+        /*
+        List<Insumo> totales = seleccion.obtenerTotalesPorId();
+        if (totales == null || totales.isEmpty()) {
+            detalle.append("No hay insumos calculados.\n");
+        } else {
+            for (Insumo i : totales) {
+                detalle.append("- ").append(i.getNombre())
+                       .append(": ").append(i.getCantidadPorUnidad()).append(" unidades\n");
+            }
+        }
+        */
+        // 2. Mostrar los productos que componen la orden tal como se mapearon desde la BD
         detalle.append("\n--- PRODUCTOS EN ESTA ORDEN ---\n");
-        for (Producto p : seleccion.getProductos()) {
-            // Usamos getDescripcion() y getCantidad() que están en tu clase Producto
-            detalle.append("• ").append(p.getDescripcion())
-                   .append(" (Cant: ").append(p.getCantidad()).append(")\n");
+        if (seleccion.getProductos() == null || seleccion.getProductos().isEmpty()) {
+        detalle.append("No hay productos registrados en esta orden.\n");
+        } else {
+            for (Producto p : seleccion.getProductos()) {
+                // Mostramos únicamente el nombre o la descripción del producto
+                detalle.append("• ").append(p.getDescripcion()).append("\n");
+            }
         }
 
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Detalles de Orden: " + seleccion.getIdODC());
-        // Acceso correcto al objeto Usuarios responsable
-        alert.setHeaderText("Responsable: " + seleccion.getResponsable().getNombre() + 
-                           " (" + seleccion.getResponsable().getUsuario() + ")");
+        
+        if (seleccion.getResponsable() != null) {
+            alert.setHeaderText("Responsable: " + seleccion.getResponsable().getNombre() + 
+                               " (" + seleccion.getResponsable().getUsuario() + ")");
+        } else {
+            alert.setHeaderText("Responsable: No asignado");
+        }
+        
         alert.setContentText(detalle.toString());
         alert.showAndWait();
     }
     
     @FXML
     private void handleBuscar(ActionEvent event) {
-        String idBusqueda = tfIdOrden.getText().trim().toLowerCase();
-        Object estadoObj = cbEstado.getValue();
-        String estadoBusqueda = (estadoObj != null) ? estadoObj.toString() : "";
-
-        // 1. Obtener la fecha del DatePicker
-        LocalDate fechaSeleccionada = dpFechaEmision.getValue();
-
-        // Validación de campos vacíos
-        if (idBusqueda.isEmpty() && fechaSeleccionada == null && estadoBusqueda.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setContentText("Por favor, ingrese un criterio de búsqueda.");
-            alert.showAndWait();
-            return;
-        }
-
-        listaFiltrada.setPredicate(orden -> {
-            // Filtro por ID y Estado
-            boolean matchId = idBusqueda.isEmpty() || 
-                             orden.getIdODC().toLowerCase().contains(idBusqueda);
-            boolean matchEstado = estadoBusqueda.isEmpty() || 
-                                 orden.getEstado().equalsIgnoreCase(estadoBusqueda);
-
-            // 2. Filtro por Fecha con NORMALIZACIÓN
-            boolean matchFecha = true;
-            if (fechaSeleccionada != null) {
-                /* Si tu ODC guarda la fecha como "2026-04-25", 
-                   fechaSeleccionada.toString() devolverá exactamente "2026-04-25".
-                   Usamos .trim() para evitar errores por espacios invisibles.
-                */
-                String fechaAComparar = fechaSeleccionada.toString(); 
-                matchFecha = orden.getFechaODC().contains(fechaSeleccionada.toString());
-            }
-
-            return matchId && matchEstado && matchFecha;
-        });
-
-        // 3. Forzar actualización de la tabla (opcional pero recomendado)
+        // Ejecutamos la lógica centralizada de filtrado al hacer clic en Buscar
+        actualizarFiltro();
         tlvLista.refresh();
     }
     
     @FXML
     private void handleLimpiar(ActionEvent event) {
-        // 1. Limpiar componentes de entrada
+        // 1. Limpiar componentes de entrada de la interfaz gráfica
         tfIdOrden.clear();
         dpFechaEmision.setValue(null);
         dpFechaEmision.getEditor().clear();
         cbEstado.getSelectionModel().clearSelection();
 
-        // 2. Restaurar el predicado para mostrar todos los datos
-        listaFiltrada.setPredicate(ODC -> true);
-
-        // Opcional: Solicitar el foco en el primer campo de búsqueda
+        // 2. Restaurar el filtro para volver a ver todas las órdenes descargadas
+        listaFiltrada.setPredicate(orden -> true);
         tfIdOrden.requestFocus();
     }
     
     private void actualizarFiltro() {
         String idBusqueda = tfIdOrden.getText().trim().toLowerCase();
-        String estadoBusqueda = (cbEstado.getValue() != null) ? cbEstado.getValue() : "";
-
-        // Obtenemos el valor del calendario
+        Object estadoObj = cbEstado.getValue();
+        String estadoBusqueda = (estadoObj != null) ? estadoObj.toString() : "";
         LocalDate fechaCalendario = dpFechaEmision.getValue();
-        // Obtenemos lo que el usuario escribe manualmente (por si acaso)
-        String textoFechaManual = dpFechaEmision.getEditor().getText().trim();
 
+        // Validación si todos los criterios están vacíos
+        if (idBusqueda.isEmpty() && fechaCalendario == null && estadoBusqueda.isEmpty()) {
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Filtros Vacíos");
+            alert.setHeaderText(null);
+            alert.setContentText("Por favor, ingrese un criterio de búsqueda.");
+            alert.showAndWait();
+            return;
+        }
+
+        // Aplicación del predicado dinámico sobre los datos persistidos
         listaFiltrada.setPredicate(orden -> {
-            // 1. Lógica de ID
+            // 1. Filtro por ID de Orden
             boolean matchId = idBusqueda.isEmpty() || 
-                             orden.getIdODC().toLowerCase().contains(idBusqueda);
+                             (orden.getIdODC() != null && orden.getIdODC().toLowerCase().contains(idBusqueda));
 
-            // 2. Lógica de Estado
+            // 2. Filtro por Estado de la orden (Emitida / Pendiente)
             boolean matchEstado = estadoBusqueda.isEmpty() || 
-                                 orden.getEstado().equalsIgnoreCase(estadoBusqueda);
+                                 (orden.getEstado() != null && orden.getEstado().equalsIgnoreCase(estadoBusqueda));
 
-            // 3. Lógica de Fecha (EL PUNTO CRÍTICO)
+            // 3. Filtro por Fecha de emisión obtenida del DatePicker
             boolean matchFecha = true;
-            
-            // Si el usuario seleccionó una fecha en el calendario
             if (fechaCalendario != null) {
-                /* IMPORTANTE: Comparamos el String almacenado en la ODC 
-                   con el String generado por el DatePicker (ISO_LOCAL_DATE: yyyy-MM-dd).
-                */
-                matchFecha = orden.getFechaODC().equals(fechaCalendario.toString());
-            } 
-            // Si no hay fecha en el calendario pero hay texto manual (ej. el usuario borró o escribió)
-            else if (!textoFechaManual.isEmpty()) {
-                matchFecha = orden.getFechaODC().contains(textoFechaManual);
+                matchFecha = orden.getFechaODC() != null && orden.getFechaODC().contains(fechaCalendario.toString());
             }
 
             return matchId && matchEstado && matchFecha;
@@ -212,35 +203,43 @@ public class ConsultaOrdenCompraController implements Initializable {
     }
     
     private void configurarColumnas() {
-        // Configuración de celdas existente
+        // Vinculación clásica de atributos con PropertyValueFactory
         tlcIdOrden.setCellValueFactory(new PropertyValueFactory<>("idODC"));
         tlcEmision.setCellValueFactory(new PropertyValueFactory<>("fechaODC"));
         tlcEstatus.setCellValueFactory(new PropertyValueFactory<>("estado"));
         
-        //columna editablo
-        tlcEstatus.setCellFactory(
-            ComboBoxTableCell.forTableColumn("Emitida", "Pendiente")
-        );
-        
+        // Convertimos la columna de estatus en un ComboBox interactivo en la tabla
+        tlcEstatus.setCellFactory(ComboBoxTableCell.forTableColumn("Emitida", "Pendiente"));
         tlcEstatus.setEditable(true);
         
-        //guarda cambios
+        // PERSISTENCIA EN CALIENTE EN LA NUBE: Al cambiar la celda, guardamos en Supabase
         tlcEstatus.setOnEditCommit(event -> {
             ODC orden = event.getRowValue();
-            orden.setEstado(event.getNewValue());
+            String nuevoEstado = event.getNewValue();
             
-            ArchivoOdcBase.actualizarODC(orden);
-           
-            tlvLista.refresh(); //actualiza visualmente
+            // Mandamos los cambios al método encargado del UPDATE en Supabase
+            boolean exito = odcDAO.actualizarEstado(orden.getIdODC(), nuevoEstado);
+            
+            if (exito) {
+                orden.setEstado(nuevoEstado);
+            } else {
+                // Si hay un fallo de conexión o base de datos, mostramos una alerta y mantenemos el valor previo
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Error de Conexión");
+                alert.setHeaderText("No se pudo actualizar el estado");
+                alert.setContentText("Ocurrió un inconveniente al conectar con Supabase. Inténtelo más tarde.");
+                alert.showAndWait();
+            }
+            tlvLista.refresh(); 
         });
 
-        // --- AGREGAR ESTO PARA CENTRAR ---
+        // Estilos de centrado para que las celdas luzcan ordenadas
         tlcIdOrden.setStyle("-fx-alignment: CENTER;");
         tlcEmision.setStyle("-fx-alignment: CENTER;");
         tlcEstatus.setStyle("-fx-alignment: CENTER;");
         tlcResponsable.setStyle("-fx-alignment: CENTER;");
 
-        // Tu lógica existente para el responsable
+        // Vinculación personalizada para mostrar el alias String del Responsable
         tlcResponsable.setCellValueFactory(cellData -> {
             Usuarios resp = cellData.getValue().getResponsable();
             return new javafx.beans.property.SimpleStringProperty(resp != null ? resp.getUsuario() : "N/A");
@@ -249,19 +248,20 @@ public class ConsultaOrdenCompraController implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // 1. Cargar datos desde la base
-        listaOriginal.addAll(ArchivoOdcBase.getOdcBase());
+        // Cargar las opciones estáticas dentro del ComboBox de búsqueda superior
+        cbEstado.setItems(FXCollections.observableArrayList("Emitida", "Pendiente"));
+
+        // 1. DESCARGA INICIAL DESDE SUPABASE: Limpiamos y traemos los datos reales
+        listaOriginal.clear();
+        listaOriginal.addAll(odcDAO.obtenerTodas());
         
-        //filtro
+        // 2. Envolver los datos reales descargados en la lista de filtrado dinámico
         listaFiltrada = new FilteredList<>(listaOriginal, p -> true);
         
-        // 3. Asignar a la tabla
+        // 3. Asignar los elementos e indicar que la tabla permite modificaciones directas
         tlvLista.setItems(listaFiltrada);
-        
-        // 4. Configurar columnas (Responsable, etc.)
         tlvLista.setEditable(true);
+        
         configurarColumnas();
     }
-        // IMPORTANTE: Aquí NO agregues listeners a tfIdOrden ni a dpFechaEmision.
-        // Al no tener listeners, la tabla no se moverá hasta que presiones el botón.
-    }
+}

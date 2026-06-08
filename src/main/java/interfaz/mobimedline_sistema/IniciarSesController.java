@@ -1,5 +1,4 @@
-//Trevor was here
-//Hola amiguitos del bosque. Soy Trevor y les explicare que chingaos hahce mi codigo :)
+
 package interfaz.mobimedline_sistema;
 
 import java.io.IOException;
@@ -9,6 +8,11 @@ import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Alert;
 
+
+/**
+ * FXML "Inicio de sesion" Controller
+ * @author Trevor
+ */
 public class IniciarSesController {
     public static Usuarios usuarioActual; //saber quién inició sesión
 
@@ -18,45 +22,47 @@ public class IniciarSesController {
     @FXML
     private PasswordField passfiCon;
 
-  @FXML
-private void handleLogin() {
-    String user = tfnombreUs.getText().trim();
-    String pass = passfiCon.getText().trim();
-    
-    if (user.isEmpty() || pass.isEmpty()) {
-        mostrarAlerta("No llenaste un campo", "Por favor, verifica tus datos.");
-        return; 
-    }
+    @FXML
+    private void handleLogin(){
+        String user = tfnombreUs.getText().trim();
+        String pass = passfiCon.getText().trim();
 
-    List<Usuarios> listaUsuarios = AgendaUsuariosBase.getUsuariosBase();
-    boolean loginExitoso = false;
-    
-    for (Usuarios u : listaUsuarios) {
-        if (u.getUsuario().equals(user) && u.getContraseña().equals(pass)) {
+        if (user.isEmpty() || pass.isEmpty()) {
+            mostrarAlerta("No llenaste un campo", "Por favor, verifica tus datos.");
+            return; 
+        }
+
+        // === CAMBIO AQUÍ: Consulta directa a la Base de Datos con el DAO ===
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+        Usuarios u = usuarioDao.buscarPorUsuario(user);
+        
+        boolean loginExitoso = false;
+
+        // Validamos si el usuario existe y si la contraseña coincide exactamente
+        if (u != null && u.getContraseña().equals(pass)) {
             loginExitoso = true;
-            usuarioActual = u; //usuario que inició sesión
-            
+            usuarioActual = u; // Guardamos el usuario que inició sesión globalmente
+
             try {
-                if (u.getPermisos()) { // Es true (Gerente)
+                // Validación del tipo de usuario para redirección usando tu método original
+                if (u.getPermisos()) { // Es true ('gerente' en la BD)
                     System.out.println("Iniciando sesión como Gerente: " + u.getNombre());
                     App.setRoot("MenuGerente"); 
-                } else { // Es false (Empleado)
+                } else { // Es false ('colaborador' en la BD)
                     System.out.println("Iniciando sesión como Empleado: " + u.getNombre());
                     App.setRoot("MenuVentas");
                 }
             } catch (IOException e) {
                 e.printStackTrace();
-                mostrarAlerta("ERROR DE SISTEMA", "No se pudo cargar la ventana.");
+                mostrarAlerta("ERROR DE SISTEMA", "No se pudo cargar la ventana del menú.");
             }
-            break;
+        }
+    
+        if (!loginExitoso){
+            mostrarAlerta("Credencial incorrecta", "Usuario o contraseña no válidos.");
+            passfiCon.clear();
         }
     }
-    
-    if (!loginExitoso) {
-        mostrarAlerta("Credencial incorrecta", "Usuario o contraseña no válidos.");
-        passfiCon.clear();
-    }
-}
     
     
     private void mostrarAlerta(String titulo, String mensaje) {

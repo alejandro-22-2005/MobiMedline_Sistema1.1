@@ -63,7 +63,6 @@ public class ConsultarEmpleadoController implements Initializable {
     private Usuarios usuarioRevelado = null; 
 
    //BOTONES DE ACCIÓN
-    
     @FXML
     void Editar(ActionEvent event) {
         
@@ -240,15 +239,24 @@ public class ConsultarEmpleadoController implements Initializable {
             if (button == ButtonType.OK) {
                 return passwordField.getText();
             }
-        return null;
+            return null;
         });
         
-        //mostramos la ventana y esperamos hasta que se ingrese una opcion
         Optional<String> resultado = dialog.showAndWait();
         
-        //validamos si la contraseña es correcta
+        // === VALIDACIÓN DINÁMICA CONTRA LOS GERENTES REALES ===
         if (resultado.isPresent()) {
-            return resultado.get().equals("gerente123");
+            String passwordIngresada = resultado.get();
+
+            // Recorremos la lista base para buscar al usuario Gerente
+            for (Usuarios u : AgendaUsuariosBase.getUsuariosBase()) {
+                // Nota: Como en tu clase Usuarios manejas 'Permisos' (boolean) o el DAO maneja 'gerente',
+                // validamos que sea administrador/gerente y que su contraseña coincida.
+                // Si en tu clase Usuarios mantienes el atributo 'Permisos' como indicador de Gerente:
+                if (u.getPermisos() && u.getContraseña().equals(passwordIngresada)) {
+                    return true; // Contraseña correcta de un gerente real
+                }
+            }
         }
 
         return false;
@@ -331,7 +339,5 @@ public class ConsultarEmpleadoController implements Initializable {
         //listaEmpleados.add(new Empleadosj("Juan", "juan123", "1234"));
         //listaEmpleados.add(new Empleadosj("Ana", "ana456", "abcd"));
     }
-    
-    
     
 }

@@ -1,6 +1,7 @@
 package interfaz.mobimedline_sistema;
 
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.beans.property.SimpleObjectProperty;
@@ -37,6 +38,10 @@ public class ConsultarProductoController implements Initializable {
     @FXML private TableColumn<Insumo, String> colNombre;
 
     @FXML private TableColumn<Insumo, Integer> colUnidad;
+    
+    // --- INSTANCIAS DAO ---
+    private final ProductoDAO productoDAO = new ProductoDAO();
+    private final InsumoDAO insumoDAO = new InsumoDAO();
 
     @Override
     public void initialize(URL url, ResourceBundle rb) {
@@ -88,7 +93,7 @@ public class ConsultarProductoController implements Initializable {
             tvProductos.refresh();
 
             mostrarAlerta(
-                    "Descripción del producto actualizada."
+                    "Descripción del producto actualizada en memoria. Use 'Guardar' para aplicar en BD."
             );
         });
 
@@ -104,11 +109,12 @@ public class ConsultarProductoController implements Initializable {
             insumo.setNombre(
                     event.getNewValue()
             );
-
+                
+            insumoDAO.actualizar(insumo);
             tvInsumos.refresh();
 
             mostrarAlerta(
-                    "Nombre del insumo actualizado."
+                    "Nombre del insumo actualizado en el catálogo global."
             );
         });
 
@@ -139,7 +145,7 @@ public class ConsultarProductoController implements Initializable {
                     dialog.setHeaderText(null);
 
                     dialog.setContentText(
-                            "Ingrese nueva cantidad:"
+                            "Ingrese nueva cantidad requerida:"
                     );
 
                     Optional<String> resultado =
@@ -257,11 +263,8 @@ public class ConsultarProductoController implements Initializable {
         ObservableList<Producto> filtrados =
                 FXCollections.observableArrayList();
 
-        for (Producto p : CatalogoProductosBase.getProductosBase()) {
-
-            if (p.getDescripcion().toLowerCase().contains(texto)
-                    || p.getSku().toLowerCase().contains(texto)) {
-
+        for (Producto p : productoDAO.listar()) {
+            if (p.getDescripcion().toLowerCase().contains(texto) || p.getSku().toLowerCase().contains(texto)) {
                 filtrados.add(p);
             }
         }
@@ -338,31 +341,25 @@ public class ConsultarProductoController implements Initializable {
         if (resultado.isPresent()
                 && resultado.get() == ButtonType.OK) {
 
-            CatalogoProductosBase
-                    .getProductosBase()
-                    .remove(seleccionado);
-
-            txtBuscar.clear();
-
-            tvInsumos.getItems().clear();
-
-            tvProductos.getSelectionModel().clearSelection();
-
-            refrescarLista();
-
-            mostrarAlerta(
-                    "Producto eliminado del catálogo."
-            );
+            // === OPERACIÓN DE BORRADO REMOTO ===
+            boolean eliminadoExitoso = productoDAO.eliminar(seleccionado.getSku());
+            
+            if (eliminadoExitoso) {
+                txtBuscar.clear();
+                tvInsumos.getItems().clear();
+                tvProductos.getSelectionModel().clearSelection();
+                refrescarLista();
+                mostrarAlerta("Producto eliminado definitivamente de Supabase.");
+            } else {
+                mostrarAlertaError("Error de Red", "No se pudo eliminar el producto. Revise las dependencias de llaves foráneas.");
+            }
         }
     }
 
     private void refrescarLista() {
-
-        tvProductos.setItems(
-                FXCollections.observableArrayList(
-                        CatalogoProductosBase.getProductosBase()
-                )
-        );
+        // Consultamos directamente al DAO para traernos lo más fresco de la nube
+        List<Producto> productosBD = productoDAO.listar();
+        tvProductos.setItems(FXCollections.observableArrayList(productosBD));
 
         tvProductos.refresh();
     }
@@ -415,7 +412,14 @@ public class ConsultarProductoController implements Initializable {
 
     @FXML
     void guardar(ActionEvent event) {
+        Producto seleccionado = tvProductos.getSelectionModel().getSelectedItem();
 
+        if (seleccionado == null) {
+            mostrarAlerta("No hay ningún producto seleccionado para guardar.");
+            return;
+        }
+        
+        
         Alert confirmacion =
                 new Alert(Alert.AlertType.CONFIRMATION);
 
@@ -432,16 +436,23 @@ public class ConsultarProductoController implements Initializable {
 
         if (resultado.isPresent()
                 && resultado.get() == ButtonType.OK) {
+            // === ENVIAR CAMBIOS EN LOTE A TRAVÉS DEL DAO ===
+            boolean actualizacionExitosa = productoDAO.actualizar(seleccionado);
+            
+            if (actualizacionExitosa) {
 
-            refrescarLista();
+                refrescarLista();
 
-            tvProductos.refresh();
+                tvProductos.refresh();
 
-            tvInsumos.refresh();
+                tvInsumos.refresh();
 
-            mostrarAlerta(
-                    "Cambios guardados correctamente."
-            );
+                mostrarAlerta(
+                        "Cambios guardados correctamente."
+                );
+            } else {
+                mostrarAlertaError("Error de Transacción", "No se pudieron actualizar los insumos de la receta.");
+            }
         }
     }
 
@@ -456,6 +467,14 @@ public class ConsultarProductoController implements Initializable {
 
         alert.setContentText(mensaje);
 
+        alert.showAndWait();
+    }
+    
+    private void mostrarAlertaError(String titulo, String mensaje) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle(titulo);
+        alert.setHeaderText(null);
+        alert.setContentText(mensaje);
         alert.showAndWait();
     }
 }

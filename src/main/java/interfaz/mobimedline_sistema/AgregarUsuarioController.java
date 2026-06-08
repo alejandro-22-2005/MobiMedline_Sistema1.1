@@ -191,18 +191,16 @@ public class AgregarUsuarioController implements Initializable {
     
     
     /**
-     * Verifica si el ID ya existe en la simulación de Base de Datos
-     * *** Warning: Se espera modificar esta fucnion con la entrada de la base de datos ***
+     * Verifica si el ID ya existe en la Base de Datos
      * @param usuarioAChecar Usuario a validar
      * @author Mike
      */
     private void validarUsuarioUnico(String usuarioAChecar) throws UsuarioDuplicadoException {
-        // Recorremos la lista estática que tienes en AgendaUsuariosBase
-        for (Usuarios u : AgendaUsuariosBase.getUsuariosBase()) {
-            // Buscamos si el ID de usuario ya está tomado (asumiendo que tienes un getter getUsuario() en la clase Usuarios)
-            if (u.getUsuario().equalsIgnoreCase(usuarioAChecar)) {
-                throw new UsuarioDuplicadoException("El usuario '" + usuarioAChecar + "' ya se encuentra registrado.");
-            }
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+    
+        // Si el DAO nos confirma que el usuario ya existe en Supabase, disparamos la excepción
+        if (usuarioDao.existeUsuario(usuarioAChecar)) {
+            throw new UsuarioDuplicadoException("El usuario '" + usuarioAChecar + "' ya se encuentra registrado.");
         }
     }
 
@@ -214,24 +212,9 @@ public class AgregarUsuarioController implements Initializable {
      * @author Mike
      */
     private int calcularSiguienteContador(String inicialesCuatroLetras) {
-        int maxContador = 1;
-        
-        for (Usuarios u : AgendaUsuariosBase.getUsuariosBase()) {
-            String idExistente = u.getUsuario(); // Ejemplo: "DOSJ01"
-            
-            if (idExistente.length() >= 4 && idExistente.substring(0, 4).equalsIgnoreCase(inicialesCuatroLetras)) {
-                try {
-                    // Extraemos los dígitos del final (posiciones de la 4 en adelante)
-                    int numeroAsignado = Integer.parseInt(idExistente.substring(4));
-                    if (numeroAsignado >= maxContador) {
-                        maxContador = numeroAsignado + 1; // Incrementamos en 1 sobre el máximo encontrado
-                    }
-                } catch (NumberFormatException e) {
-                    // Si por alguna razón los últimos caracteres no eran números, se ignora de manera segura
-                }
-            }
-        }
-        return maxContador;
+        UsuarioDAO usuarioDao = new UsuarioDAO();
+        // Devolvemos el cálculo exacto hecho desde la base de datos
+        return usuarioDao.obtenerSiguienteConsecutivoBD(inicialesCuatroLetras);
     }
     
     
